@@ -56,7 +56,11 @@
               >
             </template>
             <template v-slot:item.logo="{ item }">
-              <img v-if="item.logo" style="width: 60px;" :src="table.content_url + item.logo" />
+              <img
+                v-if="item.logo"
+                style="width: 60px"
+                :src="table.content_url + item.logo"
+              />
             </template>
 
             <template v-slot:item.actions="{ item }">
@@ -112,111 +116,115 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="data.name"
-                  :rules="Rules.account_nameRules"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم انكليزي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="data.en_name"
-                  :rules="Rules.en_nameRules"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.codeRules"
-                  outlined
-                  v-model="data.code"
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="12">
-                <v-row>
-                  <v-col cols="6" md="6">
-                    <v-label class="mb-2 font-weight-medium"
-                      >صورة ( أختياري )</v-label
-                    >
-                    <input
-                      type="file"
-                      accept="image/png, image/jpeg, image/bmp"
-                      @change="handleFileChange"
-                      style="display: none"
-                      ref="fileInput"
-                    />
-                    <v-text-field
-                      type="text"
-                      prepend-icon="mdi-camera"
-                      label="صورة"
-                      outlined
-                      v-model="selectedFile"
-                      @click="$refs.fileInput.click()"
-                      variant="outlined"
-                      color="primary"
-                      readonly
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="6"
-                    md="6"
-                    style="text-align: center"
-                    v-if="data.image"
+            <v-form v-model="valid" >
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    v-model="data.name"
+                    :rules="Rules.nameRules"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium"
+                    >الأسم انكليزي</v-label
                   >
-                    <div style="position: relative; display: inline-block">
-                      <img
-                        :src="data.image"
-                        style="width: 120px; border: solid 1px rebeccapurple"
-                      />
-                      <v-icon
-                        class="mr-2"
-                        color="error"
-                        style="
-                          position: absolute;
-                          top: 0;
-                          right: 0;
-                          cursor: pointer;
-                        "
-                        @click="removeImage"
+                  <v-text-field
+                    variant="outlined"
+                    v-model="data.en_name"
+                    :rules="Rules.en_nameRules"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.codeRules"
+                    outlined
+                    v-model="data.code"
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-row>
+                    <v-col cols="6" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >صورة ( أختياري )</v-label
                       >
-                        mdi-close
-                      </v-icon>
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-            <v-divider></v-divider>
-            <!----Personal Info---->
-            <v-card-actions>
-              <v-btn
-                size="large"
-                @click="addCenter"
-                :loading="addBtnLoading"
-                color="primary"
-                :disabled="isFormvalid"
-                type="submit"
-                text
-                >اٍضافة</v-btn
-              >
-              <v-btn
-                class="bg-lighterror text-error ml-4"
-                @click="dialog = false"
-                text
-                >أغلاق</v-btn
-              >
-            </v-card-actions>
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/bmp"
+                        @change="handleFileChange"
+                        style="display: none"
+                        ref="fileInput"
+                      />
+                      <v-text-field
+                        type="text"
+                        prepend-icon="mdi-camera"
+                        label="صورة"
+                        outlined
+                        v-model="selectedFile"
+                        @click="$refs.fileInput.click()"
+                        variant="outlined"
+                        color="primary"
+                        readonly
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="6"
+                      md="6"
+                      style="text-align: center"
+                      v-if="data.image"
+                    >
+                      <div style="position: relative; display: inline-block">
+                        <img
+                          :src="data.image"
+                          style="width: 120px; border: solid 1px rebeccapurple"
+                        />
+                        <v-icon
+                          class="mr-2"
+                          color="error"
+                          style="
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            cursor: pointer;
+                          "
+                          @click="removeImage"
+                        >
+                          mdi-close
+                        </v-icon>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <!----Personal Info---->
+              <v-card-actions>
+                <v-btn
+                  size="large"
+                  @click="addCenter"
+                  :loading="addBtnLoading"
+                  color="primary"
+                  type="submit"
+                  :disabled="!valid"
+                  text
+                  >اٍضافة</v-btn
+                >
+                <v-btn
+                  class="bg-lighterror text-error ml-4"
+                  @click="dialog = false"
+                  text
+                  >أغلاق</v-btn
+                >
+              </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -231,6 +239,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
@@ -238,7 +247,7 @@
                   variant="outlined"
                   v-model="editdItem.name"
                   outlined
-                  :rules="Rules.account_nameRules"
+                  :rules="Rules.nameRules"
                   color="primary"
                 ></v-text-field>
               </v-col>
@@ -276,9 +285,7 @@
               <v-col cols="12" md="12">
                 <v-row>
                   <v-col cols="6" md="6">
-                    <v-label class="mb-2 font-weight-medium"
-                      >صورة </v-label
-                    >
+                    <v-label class="mb-2 font-weight-medium">صورة </v-label>
                     <input
                       type="file"
                       accept="image/png, image/jpeg, image/bmp"
@@ -349,6 +356,7 @@
                 size="large"
                 @click="editItemConfirm"
                 :loading="editItemLoading"
+                :disabled="!isFormvalid"
                 color="primary"
                 type="submit"
                 text
@@ -358,6 +366,7 @@
                 الغاء
               </v-btn>
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -464,6 +473,7 @@ export default {
       },
       // message
       // add
+      valid: true,
       isFormvalid: false,
       addBtnLoading: false,
       dialog: false,
@@ -478,10 +488,10 @@ export default {
         code: "",
       },
       Rules: {
-        account_nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
-        account_en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
-        account_codeRules: [(v) => !!v || "يرجى إدخال الكود"],
-        account_country_idRules: [(v) => !!v || "يرجى أختيار الدولة"],
+        nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
+        en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
+        codeRules: [(v) => !!v || "يرجى إدخال الكود"],
+        country_idRules: [(v) => !!v || "يرجى أختيار الدولة"],
       },
       selectedFile: null,
       // add
@@ -576,7 +586,6 @@ export default {
         this.table.centers = response.data.results.data;
         this.table.totalItems = response.data.results.count;
         this.table.content_url = response.data.content_url;
-
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.$router.push("/login");

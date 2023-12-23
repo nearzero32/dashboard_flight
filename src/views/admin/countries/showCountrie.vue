@@ -239,6 +239,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الدولة </v-label>
@@ -256,7 +257,7 @@
                 <v-text-field
                   variant="outlined"
                   v-model="data.name"
-                  :rules="Rules.account_nameRules"
+                  :rules="Rules.nameRules"
                   outlined
                   color="primary"
                 ></v-text-field>
@@ -290,7 +291,7 @@
                 @click="addCenter"
                 :loading="addBtnLoading"
                 color="primary"
-                :disabled="isFormvalid"
+                :disabled="!isFormvalid"
                 type="submit"
                 text
                 >اٍضافة</v-btn
@@ -302,6 +303,7 @@
                 >أغلاق</v-btn
               >
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -316,6 +318,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الدولة </v-label>
@@ -333,7 +336,7 @@
                 <v-text-field
                   variant="outlined"
                   v-model="editdItem.name"
-                  :rules="Rules.account_nameRules"
+                  :rules="Rules.nameRules"
                   outlined
                   color="primary"
                 ></v-text-field>
@@ -378,6 +381,7 @@
                 size="large"
                 @click="editItemConfirm"
                 :loading="editItemLoading"
+                :disabled="!isFormvalid"
                 color="primary"
                 type="submit"
                 text
@@ -387,6 +391,7 @@
                 الغاء
               </v-btn>
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -442,6 +447,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="airport.isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
@@ -461,7 +467,7 @@
                 <v-text-field
                   variant="outlined"
                   v-model="airport.data.name"
-                  :rules="airport.Rules.account_nameRules"
+                  :rules="airport.Rules.nameRules"
                   outlined
                   color="primary"
                 ></v-text-field>
@@ -495,7 +501,7 @@
                 @click="addCenterAirport"
                 :loading="airport.addBtnLoading"
                 color="primary"
-                :disabled="airport.isFormvalid"
+                :disabled="!airport.isFormvalid"
                 type="submit"
                 text
                 >اٍضافة</v-btn
@@ -507,6 +513,7 @@
                 >أغلاق</v-btn
               >
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -521,6 +528,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="airport.isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
@@ -540,7 +548,7 @@
                 <v-text-field
                   variant="outlined"
                   v-model="airport.editdItem.name"
-                  :rules="airport.Rules.account_nameRules"
+                  :rules="airport.Rules.nameRules"
                   outlined
                   color="primary"
                 ></v-text-field>
@@ -586,6 +594,7 @@
                 @click="editItemConfirmAirport"
                 :loading="airport.editItemLoading"
                 color="primary"
+                :disabled="!airport.isFormvalid"
                 type="submit"
                 text
                 >تعديل</v-btn
@@ -594,6 +603,7 @@
                 الغاء
               </v-btn>
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -707,10 +717,10 @@ export default {
         code: "",
       },
       Rules: {
-        account_nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
-        account_en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
-        account_codeRules: [(v) => !!v || "يرجى إدخال الكود"],
-        account_country_idRules: [(v) => !!v || "يرجى أختيار الدولة"],
+        nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
+        en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
+        codeRules: [(v) => !!v || "يرجى إدخال الكود"],
+        country_idRules: [(v) => !!v || "يرجى أختيار الدولة"],
       },
       Suggestions: [],
       selectedItem: null,
@@ -760,7 +770,6 @@ export default {
         },
         // message
         // add
-        isFormvalid: false,
         addBtnLoading: false,
         dialog: false,
         options: [
@@ -774,10 +783,10 @@ export default {
           code: "",
         },
         Rules: {
-          account_nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
-          account_en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
-          account_codeRules: [(v) => !!v || "يرجى إدخال الكود"],
-          account_country_idRules: [(v) => !!v || "يرجى أختيار المدينة"],
+          nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
+          en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
+          codeRules: [(v) => !!v || "يرجى إدخال الكود"],
+          country_idRules: [(v) => !!v || "يرجى أختيار المدينة"],
         },
         Suggestions: [],
         CountriesAll: [],

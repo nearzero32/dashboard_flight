@@ -73,6 +73,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="mb-2 font-weight-medium">عنوان الأشعار</v-label>
@@ -156,7 +157,7 @@
                 @click="addCenter"
                 :loading="addBtnLoading"
                 color="primary"
-                :disabled="isFormvalid"
+                :disabled="!isFormvalid"
                 type="submit"
                 text
                 >اٍضافة</v-btn
@@ -168,6 +169,7 @@
                 >أغلاق</v-btn
               >
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>

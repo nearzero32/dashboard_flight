@@ -125,6 +125,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
@@ -145,7 +146,7 @@
                   variant="outlined"
                   v-model="data.name"
                   outlined
-                  :rules="Rules.account_nameRules"
+                  :rules="Rules.nameRules"
                   color="primary"
                 ></v-text-field>
               </v-col>
@@ -178,7 +179,7 @@
                 @click="addCenter"
                 :loading="addBtnLoading"
                 color="primary"
-                :disabled="isFormvalid"
+                :disabled="!isFormvalid"
                 type="submit"
                 text
                 >اٍضافة</v-btn
@@ -190,6 +191,7 @@
                 >أغلاق</v-btn
               >
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -204,6 +206,7 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
+            <v-form v-model="isFormvalid" >
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
@@ -224,7 +227,7 @@
                 outlined
                   variant="outlined"
                   v-model="editdItem.name"
-                  :rules="Rules.account_nameRules"
+                  :rules="Rules.nameRules"
                   color="primary"
                 ></v-text-field>
               </v-col>
@@ -268,6 +271,7 @@
                 size="large"
                 @click="editItemConfirm"
                 :loading="editItemLoading"
+                :disabled="!isFormvalid"
                 color="primary"
                 type="submit"
                 text
@@ -277,6 +281,7 @@
                 الغاء
               </v-btn>
             </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-card>
@@ -406,10 +411,10 @@ export default {
         code: "",
       },
       Rules: {
-        account_nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
-        account_en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
-        account_codeRules: [(v) => !!v || "يرجى إدخال الكود"],
-        account_country_idRules: [(v) => !!v || "يرجى أختيار المدينة"],
+        nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
+        en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
+        codeRules: [(v) => !!v || "يرجى إدخال الكود"],
+        country_idRules: [(v) => !!v || "يرجى أختيار المدينة"],
       },
       Suggestions: [],
       CountriesAll: [],

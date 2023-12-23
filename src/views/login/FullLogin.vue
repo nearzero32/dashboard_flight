@@ -1,57 +1,79 @@
 <template>
-  <v-row>
-    <v-col cols="12" lg="12" xl="12" class="d-flex align-center">
-      <v-container>
-        <div class="pa-7 pa-sm-12">
-          <v-row>
-            <v-col cols="12" lg="12" xl="12">
-              <img src="@/assets/images/logo-icon.png" />
-              <h2 class="font-weight-bold mt-4 blue-grey--text text--darken-2">
-                shahrazad
-              </h2>
-              <h6 class="subtitle-1">Welcome to shahrazad</h6>
-
-              <v-form
-                ref="form"
-                v-model="valid"
-                lazy-validation
-                action="/dashboards/analytical"
-              >
-                <v-text-field
-                  v-model="email"
-                  :rules="emailRules"
-                  label="E-mail"
-                  class="mt-4"
-                  required
-                  outlined
-                ></v-text-field>
-                <v-text-field
-                  v-model="password"
-                  :counter="10"
-                  :rules="passwordRules"
-                  label="Password"
-                  required
-                  outlined
-                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="show1 ? 'text' : 'password'"
-                ></v-text-field>
-
-                <v-btn
-                  :disabled="!valid"
-                  color="info"
-                  block
-                  class="mr-4"
-                  submit
-                  @click="submit"
-                  >Sign In</v-btn
+  <div>
+    <v-row>
+      <v-col cols="12" lg="12" xl="12" class="d-flex align-center">
+        <v-container>
+          <div class="pa-7 pa-sm-12">
+            <v-row>
+              <v-col cols="12" lg="12" xl="12">
+                <img src="@/assets/images/logo-icon.png" />
+                <h2
+                  class="font-weight-bold mt-4 blue-grey--text text--darken-2"
                 >
-              </v-form>
-            </v-col>
-          </v-row>
-        </div>
-      </v-container>
-    </v-col>
-  </v-row>
+                  shahrazad
+                </h2>
+                <h6 class="subtitle-1">Welcome to shahrazad</h6>
+
+                <v-form
+                  ref="form"
+                  v-model="valid"
+                  lazy-validation
+                  action="/dashboards/analytical"
+                >
+                  <v-text-field
+                    v-model="email"
+                    :rules="emailRules"
+                    label="E-mail"
+                    class="mt-4"
+                    required
+                    outlined
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="password"
+                    :counter="10"
+                    :rules="passwordRules"
+                    label="Password"
+                    required
+                    outlined
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show1 ? 'text' : 'password'"
+                    @click:append="togglePasswordVisibility"
+                  ></v-text-field>
+
+                  <v-btn
+                    :disabled="!valid"
+                    color="info"
+                    :loading="loading"
+                    block
+                    class="mr-4"
+                    submit
+                    @click="submit"
+                    >Sign In</v-btn
+                  >
+                </v-form>
+              </v-col>
+            </v-row>
+          </div>
+        </v-container>
+      </v-col>
+    </v-row>
+    <!-- - Dailog for show info to user -->
+    <v-dialog v-model="dialogData.open" max-width="500px">
+      <v-toolbar :color="dialogData.color" dense />
+      <v-card>
+        <v-card-title class="headline justify-center">
+          {{ dialogData.bodyText }}
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" text @click="dialogData.open = false">
+            تم
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- - Dailog for show info to user -->
+  </div>
 </template>
 
 <script>
@@ -63,6 +85,7 @@ export default {
     valid: true,
     password: "",
     show1: false,
+    loading: false,
     passwordRules: [
       (v) => !!v || "كلمة المرور مطلبة",
       (v) => (v && v.length > 5) || "يجب أن تكون كلمة المرور أكثر من 6",
@@ -73,6 +96,13 @@ export default {
       (v) => /.+@.+\..+/.test(v) || "يجب ان يكون البريد الاكتروني صحيح",
     ],
     checkbox: false,
+    // message
+    dialogData: {
+      open: false,
+      color: "primary",
+      bodyText: "test",
+    },
+    // message
   }),
   created() {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -87,11 +117,31 @@ export default {
     }
   },
   methods: {
-    submit() {
-      this.$store.dispatch("login", {
-        email: this.email,
-        password: this.password,
-      });
+    togglePasswordVisibility() {
+      this.show1 = !this.show1;
+    },
+    async submit() {
+      this.loading = true;
+
+      try {
+        await this.$store.dispatch("login", {
+          email: this.email,
+          password: this.password,
+        });
+
+        this.loading = false;
+      } catch (error) {
+        this.showDialogfunction(
+          "فشل, أسم المستخدم أو كلمة المرور خطاء",
+          "#FF5252"
+        );
+        this.loading = false;
+      }
+    },
+    showDialogfunction(bodyText, color) {
+      this.dialogData.open = true;
+      this.dialogData.bodyText = bodyText;
+      this.dialogData.color = color;
     },
   },
 };
