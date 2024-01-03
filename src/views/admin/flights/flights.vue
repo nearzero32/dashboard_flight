@@ -631,7 +631,9 @@ export default {
         }
       }
     },
-    async addCenter() {
+    async addCenter(event) {
+      event.preventDefault();
+
       this.addBtnLoading = true;
 
       try {
@@ -715,7 +717,9 @@ export default {
       this.editdItem.departure_date = dayjs(item.departure_date).toDate();
       this.old_logo = item.logo;
     },
-    async editItemConfirm() {
+    async editItemConfirm(event) {
+      event.preventDefault();
+
       this.editItemLoading = true;
       try {
         const response = await API.editFlights({

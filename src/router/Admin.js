@@ -10,6 +10,8 @@ import cities from "@/views/admin/cities/cities.vue";
 import airports from "@/views/admin/airports/airports.vue";
 import airlines from "@/views/admin/airlines/airlines.vue";
 import flights from "@/views/admin/flights/flights.vue";
+import ads from "@/views/admin/ads/ads.vue";
+import services from "@/views/admin/services/services.vue";
 
 const Admin = {
   path: "/",
@@ -77,6 +79,16 @@ const Admin = {
       path: "/admin-flights",
       name: "admin-flights",
       component: flights,
+    },
+    {
+      path: "/admin-ads",
+      name: "admin-ads",
+      component: ads,
+    },
+    {
+      path: "/admin-services",
+      name: "admin-services",
+      component: services,
     },
   ],
 };

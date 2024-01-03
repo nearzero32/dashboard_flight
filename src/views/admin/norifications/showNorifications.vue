@@ -359,7 +359,9 @@ export default {
         this.table.loading = false;
       }
     },
-    async addCenter() {
+    async addCenter(event) {
+      event.preventDefault();
+
       this.editItemLoading = true;
       try {
         const response = await API.addNorifications({

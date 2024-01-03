@@ -8,6 +8,7 @@
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
+        "@mdi/font": "^7.4.47",
         "@mdi/js": "^5.6.55",
         "algoliasearch": "^4.5.1",
         "apexcharts": "^3.27.3",

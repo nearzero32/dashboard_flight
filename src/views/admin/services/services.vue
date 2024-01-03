@@ -9,16 +9,8 @@
       <div class="mt-4">
         <v-card>
           <v-card-title>
-            <v-btn
-              color="primary"
-              text
-              class="ml-auto"
-              v-if="
-                my.privileges.actions && my.privileges.actions.includes('add')
-              "
-              @click="dialog = true"
-            >
-              <v-icon class="mr-2">mdi-plus</v-icon>اٍضافة دولة جديدة
+            <v-btn color="primary" text class="ml-auto" @click="dialog = true">
+              <v-icon class="mr-2">mdi-plus</v-icon>اٍضافة خدمة جديد
             </v-btn>
 
             <v-spacer></v-spacer>
@@ -46,30 +38,14 @@
             <template v-slot:item.num="{ item }">
               {{ table.centers.indexOf(item) + 1 }}
             </template>
-            <template v-slot:item.name="{ item }">
-              <router-link
-                :to="`/show-countrie/${item._id}/${item.name}/${item.is_active}/${item.code}/${item.phone_code}`"
-              >
-                {{ item.name }}
-              </router-link>
+            <template v-slot:item.image="{ item }">
+              <img
+                :src="table.content_url + item.image"
+                style="width: 60px; border: solid 1px rebeccapurple"
+              />
             </template>
-            <template v-slot:item.is_active="{ item }">
-              <v-icon v-if="item.is_active" color="#02ff00" class="mr-2"
-                >mdi-check</v-icon
-              >
-              <v-icon v-else color="rgb(255 0 0)" class="mr-2"
-                >mdi-close-circle</v-icon
-              >
-            </template>
-
             <template v-slot:item.actions="{ item }">
-              <VTooltip
-                bottom
-                v-if="
-                  my.privileges.actions &&
-                  my.privileges.actions.includes('edit')
-                "
-              >
+              <VTooltip bottom>
                 <template #activator="{ attrs }">
                   <v-icon
                     color="rgb(243 216 1)"
@@ -82,13 +58,7 @@
                 </template>
                 <span>تعديل</span>
               </VTooltip>
-              <VTooltip
-                bottom
-                v-if="
-                  my.privileges.actions &&
-                  my.privileges.actions.includes('remove')
-                "
-              >
+              <VTooltip bottom>
                 <template #activator="{ attrs }">
                   <v-icon
                     color="#FF5252"
@@ -111,65 +81,82 @@
     <v-dialog v-model="dialog" max-width="800px">
       <v-card>
         <v-card>
-          <v-card-title class="text-h5">اٍضافة دولة جديدة</v-card-title>
+          <v-card-title class="text-h5">اٍضافة خدمة جديد</v-card-title>
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
             <v-form v-model="isFormvalid">
               <v-row>
-                <v-col cols="12" md="12">
-                  <v-label class="font-weight-medium mb-2">الأقتراحات </v-label>
-                  <v-select
-                    v-model="selectedItem"
-                    :items="Suggestions"
-                    item-text="name"
-                    return-object
-                    outlined
-                    label="الأقتراحات"
-                  />
-                </v-col>
-
                 <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
+                  <v-label class="mb-2 font-weight-medium">الأسم</v-label>
                   <v-text-field
                     variant="outlined"
                     v-model="data.name"
-                    :rules="Rules.nameRules"
+                    :rules="Rules.name"
                     color="primary"
                     outlined
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium"
-                    >الأسم انكليزي</v-label
-                  >
-                  <v-text-field
+                <v-col cols="12" md="12">
+                  <v-label class="mb-2 font-weight-medium">التفاصيل</v-label>
+                  <v-textarea
                     variant="outlined"
-                    v-model="data.en_name"
-                    :rules="Rules.en_nameRules"
-                    outlined
+                    v-model="data.description"
+                    :rules="Rules.description"
                     color="primary"
-                  ></v-text-field>
+                    outlined
+                  ></v-textarea>
                 </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.codeRules"
-                    v-model="data.code"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">كود الهاتف</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.phone_codeRules"
-                    v-model="data.phone_code"
-                    color="primary"
-                    outlined
-                  ></v-text-field>
+                <v-col cols="12" md="12">
+                  <v-row>
+                    <v-col cols="6" md="6">
+                      <v-label class="mb-2 font-weight-medium">صورة </v-label>
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/bmp"
+                        @change="handleFileChange"
+                        style="display: none"
+                        ref="fileInput"
+                      />
+                      <v-text-field
+                        type="text"
+                        prepend-icon="mdi-camera"
+                        label="صورة"
+                        outlined
+                        v-model="selectedFile"
+                        @click="$refs.fileInput.click()"
+                        variant="outlined"
+                        color="primary"
+                        readonly
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="6"
+                      md="6"
+                      style="text-align: center"
+                      v-if="data.image"
+                    >
+                      <div style="position: relative; display: inline-block">
+                        <img
+                          :src="data.image"
+                          style="width: 60px; border: solid 1px rebeccapurple"
+                        />
+                        <v-icon
+                          class="mr-2"
+                          color="error"
+                          style="
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            cursor: pointer;
+                          "
+                          @click="removeImage"
+                        >
+                          mdi-close
+                        </v-icon>
+                      </div>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
               <v-divider></v-divider>
@@ -203,64 +190,96 @@
     <v-dialog v-model="dialogEdit" max-width="800px">
       <v-card>
         <v-card elevation="10">
-          <v-card-title class="text-h5">تعديل </v-card-title>
+          <v-card-title class="text-h5">تعديل الخدمة</v-card-title>
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
             <v-form v-model="isFormvalid">
-              <v-row>
+                              <v-row>
                 <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
+                  <v-label class="mb-2 font-weight-medium">الأسم</v-label>
                   <v-text-field
                     variant="outlined"
                     v-model="editdItem.name"
-                    :rules="Rules.nameRules"
-                    outlined
+                    :rules="Rules.name"
                     color="primary"
+                    outlined
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium"
-                    >الأسم انكليزي</v-label
-                  >
-                  <v-text-field
+                <v-col cols="12" md="12">
+                  <v-label class="mb-2 font-weight-medium">التفاصيل</v-label>
+                  <v-textarea
                     variant="outlined"
-                    v-model="editdItem.en_name"
-                    outlined
-                    :rules="Rules.en_nameRules"
+                    v-model="editdItem.description"
+                    :rules="Rules.description"
                     color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.codeRules"
                     outlined
-                    v-model="editdItem.code"
-                    color="primary"
-                  ></v-text-field>
+                  ></v-textarea>
                 </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">كود الهاتف</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.phone_codeRules"
-                    outlined
-                    v-model="editdItem.phone_code"
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                  <v-select
-                    v-model="editdItem.is_active"
-                    :items="options"
-                    item-title="text"
-                    outlined
-                    item-value="value"
-                    label="الحالة"
-                  />
+                <v-col cols="12" md="12">
+                  <v-row>
+                    <v-col cols="6" md="6">
+                      <v-label class="mb-2 font-weight-medium">صورة </v-label>
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/bmp"
+                        @change="handleFileChangeEdit"
+                        style="display: none"
+                        ref="fileInput"
+                      />
+                      <v-text-field
+                        type="text"
+                        prepend-icon="mdi-camera"
+                        label="صورة"
+                        v-model="selectedFile"
+                        outlined
+                        @click="$refs.fileInput.click()"
+                        variant="outlined"
+                        color="primary"
+                        readonly
+                      ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="6"
+                      md="6"
+                      style="text-align: center"
+                      v-if="editdItem.image"
+                    >
+                      <div style="position: relative; display: inline-block">
+                        <img
+                          id="oldL"
+                          :src="table.content_url + editdItem.image"
+                          style="
+                            display: block;
+                            width: 120px;
+                            border: solid 1px rebeccapurple;
+                          "
+                        />
+                        <img
+                          id="newL"
+                          :src="editdItem.image"
+                          style="
+                            display: none;
+                            width: 120px;
+                            border: solid 1px rebeccapurple;
+                          "
+                        />
+                        <v-icon
+                          class="mr-2"
+                          color="error"
+                          style="
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            cursor: pointer;
+                          "
+                          @click="removeImageEdit"
+                        >
+                          mdi-close
+                        </v-icon>
+                      </div>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
               <br />
@@ -309,7 +328,7 @@
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center">
-          هل انت متأكد من حذف هذا الحساب ؟
+          هل انت متأكد من حذف هذه الخدمة ؟
         </v-card-title>
         <v-card-actions>
           <v-spacer />
@@ -330,17 +349,16 @@
     <!-- End delete dailog -->
   </v-container>
 </template>
-    
-<script>
+        
+    <script>
 import API from "@/api/adminAPI";
 
 export default {
   data() {
     return {
-      my: JSON.parse(localStorage.getItem("user")),
       // nav
       page: {
-        title: "الدول",
+        title: "الخدمات",
       },
       breadcrumbs: [
         {
@@ -349,13 +367,14 @@ export default {
           to: "/Index",
         },
         {
-          text: "الدول",
+          text: "الخدمات",
           disabled: true,
         },
       ],
       // nav
       // table
       table: {
+        content_url: null,
         search: "",
         itemsPerPage: 5,
         headers: [
@@ -364,10 +383,8 @@ export default {
             value: "num",
           },
           { text: "الأسم", value: "name" },
-          { text: "الأسم انكليزي", value: "en_name" },
-          { text: "الحالة", value: "is_active" },
-          { text: "كود الأسم", value: "code" },
-          { text: "كود الهاتف", value: "phone_code" },
+          { text: "صورة", value: "image" },
+          { text: "تفاصيل", value: "description" },
           { text: "العمليات", value: "actions" },
         ],
         centers: [],
@@ -390,28 +407,22 @@ export default {
       isFormvalid: false,
       addBtnLoading: false,
       dialog: false,
-      options: [
-        { text: "مفعل", value: true },
-        { text: "غير مفعل", value: false },
-      ],
       data: {
-        name: "",
-        en_name: "",
-        code: "",
-        phone_code: "",
+        name: null,
+        description: null,
+        image: null,
       },
+      selectedFile: null,
       Rules: {
-        nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
-        en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
-        codeRules: [(v) => !!v || "يرجى إدخال الكود"],
-        phone_codeRules: [(v) => !!v || "يرجى إدخال كود الهاتف"],
+        name: [(v) => !!v || "يرجى أضافة صورة"],
+        description: [(v) => !!v || "يرجى أضافة صورة"],
+        image: [(v) => !!v || "يرجى أضافة صورة"],
       },
-      Suggestions: [],
-      selectedItem: {},
       // add
       // edit
       editItemLoading: false,
       dialogEdit: false,
+      old_image: null,
       editdItem: {},
       // edit
       // delete
@@ -423,52 +434,68 @@ export default {
   },
   created() {
     this.getCenter();
-    this.getCountriesSuggestions();
   },
-  watch: {
-    "table.search": "getCenter",
-    selectedItem: {
-      handler(newVal) {
-        if (newVal !== null && typeof newVal === "object") {
-          this.data.name = newVal.name;
-          this.data.en_name = newVal.en_name;
-          this.data.code = newVal.code;
-          this.data.phone_code = newVal.phone_code;
-        } else {
-          console.error("selectedItem is null or not an object");
-        }
-      },
-      deep: true,
-    },
-  },
-
   methods: {
+    handleFileChange(event) {
+      const file = event.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          this.data.image = reader.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    },
+    removeImage() {
+      this.data.image = null;
+
+      if (this.selectedFile) {
+        this.selectedFile = null;
+      }
+    },
+    handleFileChangeEdit(event) {
+      const file = event.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          this.editdItem.image = reader.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      var oldL = document.getElementById("oldL");
+      var newL = document.getElementById("newL");
+      oldL.style.display = "none";
+      newL.style.display = "block";
+    },
+    removeImageEdit() {
+      this.editdItem.image = null;
+
+      if (this.selectedFile) {
+        this.selectedFile = null;
+      }
+    },
+
     async getCenter() {
       try {
         this.table.loading = true;
-        const key =
-          this.tableOptions.sortBy.length > 0
-            ? this.tableOptions.sortBy[0]
-            : "createdAt";
-        const order =
-          this.tableOptions.sortDesc.length > 0
-            ? this.tableOptions.sortDesc[0]
-              ? "desc"
-              : "asc"
-            : "desc";
-
-        const sortByJSON = JSON.stringify({ key, order });
 
         const { page, itemsPerPage } = this.tableOptions;
 
-        const response = await API.getCountries({
+        const response = await API.getServices({
           page,
           limit: itemsPerPage,
-          sortBy: sortByJSON,
           search: this.table.search,
         });
 
         this.table.centers = response.data.results.data;
+        this.table.content_url = response.data.content_url;
         this.table.totalItems = response.data.results.count;
       } catch (error) {
         if (error.response && error.response.status === 401) {
@@ -480,45 +507,26 @@ export default {
         this.table.loading = false;
       }
     },
-    async getCountriesSuggestions() {
-      this.table.loading = true;
-
-      try {
-        const response = await API.getCountriesSuggestions();
-        this.Suggestions = response.data.results;
-        this.table.loading = false;
-      } catch (error) {
-        if (error.response.status === 401) {
-          this.$router.push("/login");
-        } else if (error.response.status === 500) {
-          this.addBtnLoading = false;
-          this.showDialogfunction(error.response.data.results, "#FF5252");
-        }
-      }
-    },
-
     async addCenter(event) {
       event.preventDefault();
-
       this.addBtnLoading = true;
 
+      if (this.data.image === null) {
+        this.addBtnLoading = false;
+        this.showDialogfunction("يرجى أضافة صورة", "primary");
+      }
       try {
-        const response = await API.addCountries({
+        const response = await API.addServices({
           name: this.data.name,
-          en_name: this.data.en_name,
-          code: this.data.code,
-          phone_code: this.data.phone_code,
+          description: this.data.description,
+          image: this.data.image,
         });
 
         this.addBtnLoading = false;
-        this.data.name = "";
-        this.data.en_name = "";
-        this.data.code = "";
-        this.data.phone_code = "";
-        await this.getCenter();
-        this.dialog = false;
+        this.getCenter();
+
         this.showDialogfunction(response.data.message, "primary");
-        this.selectedItem = {};
+        this.dialog = false;
       } catch (error) {
         if (error.response.status === 401) {
           this.$router.push("/login");
@@ -530,31 +538,34 @@ export default {
     },
     editItem(item) {
       this.editdItem = { ...item };
+      this.old_image = item.image;
       this.dialogEdit = true;
     },
     async editItemConfirm(event) {
       event.preventDefault();
+
       this.editItemLoading = true;
-      console.log(this.editdItem.is_active);
+      if (this.editdItem.image === null) {
+        this.editItemLoading = false;
+        this.showDialogfunction("يرجى أضافة صورة", "primary");
+      }
       try {
-        const response = await API.editCountries({
-          country_id: this.editdItem._id,
-          name: this.editdItem.name,
-          en_name: this.editdItem.en_name,
-          code: this.editdItem.code,
-          phone_code: this.editdItem.phone_code,
-          is_active: this.editdItem.is_active,
+        const response = await API.editServices({
+            service_id: this.editdItem._id,
+            name: this.editdItem.name,
+            description: this.editdItem.description,
+            old_image: this.old_image,
+            image: this.editdItem.image,
         });
         this.editItemLoading = false;
-        this.editdItem = {};
-        await this.getCenter();
-        this.dialogEdit = false;
+        this.getCenter();
+
         this.showDialogfunction(response.data.message, "primary");
+        this.dialogEdit = false;
       } catch (error) {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           this.$router.push("/login");
-        } else if (error.response.status === 500) {
-          this.addBtnLoading = false;
+        } else if (error.response && error.response.status === 500) {
           this.showDialogfunction(error.response.data.results, "#FF5252");
         }
       }
@@ -572,7 +583,7 @@ export default {
       this.deleteItemLoading = true;
 
       try {
-        const response = await API.removeCountries(this.deletedItem._id);
+        const response = await API.removeServices(this.deletedItem._id);
 
         this.deleteItemLoading = false;
         this.dialogDelete = false;
@@ -589,3 +600,4 @@ export default {
   },
 };
 </script>
+    

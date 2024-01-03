@@ -9,30 +9,12 @@
       <div class="mt-4">
         <v-card>
           <v-card-title>
-            <v-btn
-              color="primary"
-              text
-              class="ml-auto"
-              v-if="
-                my.privileges.actions && my.privileges.actions.includes('add')
-              "
-              @click="dialog = true"
-            >
-              <v-icon class="mr-2">mdi-plus</v-icon>اٍضافة خط جديد
+            <v-btn color="primary" text class="ml-auto" @click="dialog = true">
+              <v-icon class="mr-2">mdi-plus</v-icon>اٍضافة اعلان جديد
             </v-btn>
+
             <v-spacer></v-spacer>
-
-            <v-text-field
-              v-model="table.search"
-              @input="getCenter"
-              append-icon="mdi-magnify"
-              label="بحث"
-              single-line
-              outlined
-              hide-details
-            ></v-text-field>
           </v-card-title>
-
           <v-data-table
             :headers="table.headers"
             loading-text="جاري التحميل ... الرجاء الانتظار"
@@ -47,30 +29,14 @@
             <template v-slot:item.num="{ item }">
               {{ table.centers.indexOf(item) + 1 }}
             </template>
-            <template v-slot:item.is_active="{ item }">
-              <v-icon v-if="item.is_active" color="#02ff00" class="mr-2"
-                >mdi-check</v-icon
-              >
-              <v-icon v-else color="rgb(255 0 0)" class="mr-2"
-                >mdi-close-circle</v-icon
-              >
-            </template>
-            <template v-slot:item.logo="{ item }">
+            <template v-slot:item.image="{ item }">
               <img
-                v-if="item.logo"
-                style="width: 60px"
-                :src="table.content_url + item.logo"
+                :src="table.content_url + item.image"
+                style="width: 60px; border: solid 1px rebeccapurple"
               />
             </template>
-
             <template v-slot:item.actions="{ item }">
-              <VTooltip
-                bottom
-                v-if="
-                  my.privileges.actions &&
-                  my.privileges.actions.includes('edit')
-                "
-              >
+              <VTooltip bottom>
                 <template #activator="{ attrs }">
                   <v-icon
                     color="rgb(243 216 1)"
@@ -83,13 +49,7 @@
                 </template>
                 <span>تعديل</span>
               </VTooltip>
-              <VTooltip
-                bottom
-                v-if="
-                  my.privileges.actions &&
-                  my.privileges.actions.includes('remove')
-                "
-              >
+              <VTooltip bottom>
                 <template #activator="{ attrs }">
                   <v-icon
                     color="#FF5252"
@@ -112,50 +72,16 @@
     <v-dialog v-model="dialog" max-width="800px">
       <v-card>
         <v-card>
-          <v-card-title class="text-h5">اٍضافة خط جديد</v-card-title>
+          <v-card-title class="text-h5">اٍضافة اعلان جديد</v-card-title>
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-form v-model="valid" >
+            <v-form v-model="isFormvalid">
               <v-row>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    v-model="data.name"
-                    :rules="Rules.nameRules"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium"
-                    >الأسم انكليزي</v-label
-                  >
-                  <v-text-field
-                    variant="outlined"
-                    v-model="data.en_name"
-                    :rules="Rules.en_nameRules"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.codeRules"
-                    outlined
-                    v-model="data.code"
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
                 <v-col cols="12" md="12">
                   <v-row>
                     <v-col cols="6" md="6">
-                      <v-label class="mb-2 font-weight-medium"
-                        >صورة ( أختياري )</v-label
-                      >
+                      <v-label class="mb-2 font-weight-medium">صورة </v-label>
                       <input
                         type="file"
                         accept="image/png, image/jpeg, image/bmp"
@@ -184,7 +110,7 @@
                       <div style="position: relative; display: inline-block">
                         <img
                           :src="data.image"
-                          style="width: 120px; border: solid 1px rebeccapurple"
+                          style="width: 60px; border: solid 1px rebeccapurple"
                         />
                         <v-icon
                           class="mr-2"
@@ -212,8 +138,8 @@
                   @click="addCenter"
                   :loading="addBtnLoading"
                   color="primary"
+                  :disabled="!isFormvalid"
                   type="submit"
-                  :disabled="!valid"
                   text
                   >اٍضافة</v-btn
                 >
@@ -235,54 +161,13 @@
     <v-dialog v-model="dialogEdit" max-width="800px">
       <v-card>
         <v-card elevation="10">
-          <v-card-title class="text-h5">تعديل </v-card-title>
+          <v-card-title class="text-h5">تعديل الأعلان</v-card-title>
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-form v-model="isFormvalid" >
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="editdItem.name"
-                  outlined
-                  :rules="Rules.nameRules"
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم انكليزي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  outlined
-                  v-model="editdItem.en_name"
-                  :rules="Rules.en_nameRules"
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.codeRules"
-                  v-model="editdItem.code"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                <v-select
-                  v-model="editdItem.is_active"
-                  :items="options"
-                  item-text="text"
-                  outlined
-                  item-value="value"
-                  label="الحالة"
-                />
-              </v-col>
-              <v-col cols="12" md="12">
+            <v-form v-model="isFormvalid">
+              <v-row>
+                <v-col cols="12" md="12">
                 <v-row>
                   <v-col cols="6" md="6">
                     <v-label class="mb-2 font-weight-medium">صورة </v-label>
@@ -309,12 +194,12 @@
                     cols="6"
                     md="6"
                     style="text-align: center"
-                    v-if="editdItem.logo"
+                    v-if="editdItem.image"
                   >
                     <div style="position: relative; display: inline-block">
                       <img
                         id="oldL"
-                        :src="table.content_url + editdItem.logo"
+                        :src="table.content_url + editdItem.image"
                         style="
                           display: block;
                           width: 120px;
@@ -323,7 +208,7 @@
                       />
                       <img
                         id="newL"
-                        :src="editdItem.logo"
+                        :src="editdItem.image"
                         style="
                           display: none;
                           width: 120px;
@@ -347,25 +232,25 @@
                   </v-col>
                 </v-row>
               </v-col>
-            </v-row>
-            <br />
-            <v-divider></v-divider>
-            <!----Personal Info---->
-            <v-card-actions>
-              <v-btn
-                size="large"
-                @click="editItemConfirm"
-                :loading="editItemLoading"
-                :disabled="!isFormvalid"
-                color="primary"
-                type="submit"
-                text
-                >تعديل</v-btn
-              >
-              <v-btn color="primary" text @click="dialogEdit = false">
-                الغاء
-              </v-btn>
-            </v-card-actions>
+              </v-row>
+              <br />
+              <v-divider></v-divider>
+              <!----Personal Info---->
+              <v-card-actions>
+                <v-btn
+                  size="large"
+                  @click="editItemConfirm"
+                  :loading="editItemLoading"
+                  :disabled="!isFormvalid"
+                  color="primary"
+                  type="submit"
+                  text
+                  >تعديل</v-btn
+                >
+                <v-btn color="primary" text @click="dialogEdit = false">
+                  الغاء
+                </v-btn>
+              </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>
@@ -394,7 +279,7 @@
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center">
-          هل انت متأكد من حذف هذا الحساب ؟
+          هل انت متأكد من حذف هذا الأعلان ؟
         </v-card-title>
         <v-card-actions>
           <v-spacer />
@@ -415,17 +300,16 @@
     <!-- End delete dailog -->
   </v-container>
 </template>
-    
-<script>
+      
+  <script>
 import API from "@/api/adminAPI";
 
 export default {
   data() {
     return {
-      my: JSON.parse(localStorage.getItem("user")),
       // nav
       page: {
-        title: "الخطوط",
+        title: "الأعلانات",
       },
       breadcrumbs: [
         {
@@ -434,13 +318,14 @@ export default {
           to: "/Index",
         },
         {
-          text: "الخطوط",
+          text: "الأعلانات",
           disabled: true,
         },
       ],
       // nav
       // table
       table: {
+        content_url: null,
         search: "",
         itemsPerPage: 5,
         headers: [
@@ -448,12 +333,7 @@ export default {
             text: "#",
             value: "num",
           },
-          { text: "الأسم", value: "name" },
-          { text: "الأسم انكليزي", value: "en_name" },
-          { text: "الدولة", value: "country_name" },
-          { text: "الحالة", value: "is_active" },
-          { text: "كود الأسم", value: "code" },
-          { text: "الوكو", value: "logo" },
+          { text: "صورة", value: "image" },
           { text: "العمليات", value: "actions" },
         ],
         centers: [],
@@ -473,27 +353,16 @@ export default {
       },
       // message
       // add
-      valid: true,
       isFormvalid: false,
       addBtnLoading: false,
       dialog: false,
-      options: [
-        { text: "مفعل", value: true },
-        { text: "غير مفعل", value: false },
-      ],
       data: {
         image: null,
-        name: "",
-        en_name: "",
-        code: "",
-      },
-      Rules: {
-        nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
-        en_nameRules: [(v) => !!v || "يرجى إدخال الأسم انكليزي"],
-        codeRules: [(v) => !!v || "يرجى إدخال الكود"],
-        country_idRules: [(v) => !!v || "يرجى أختيار الدولة"],
       },
       selectedFile: null,
+      Rules: {
+        image: [(v) => !!v || "يرجى أضافة صورة"],
+      },
       // add
       // edit
       editItemLoading: false,
@@ -524,6 +393,13 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+    removeImage() {
+      this.data.image = null;
+
+      if (this.selectedFile) {
+        this.selectedFile = null;
+      }
+    },
     handleFileChangeEdit(event) {
       const file = event.target.files[0];
 
@@ -531,7 +407,7 @@ export default {
         const reader = new FileReader();
 
         reader.onload = () => {
-          this.editdItem.logo = reader.result;
+          this.editdItem.image = reader.result;
         };
 
         reader.readAsDataURL(file);
@@ -543,14 +419,7 @@ export default {
       newL.style.display = "block";
     },
     removeImageEdit() {
-      this.editdItem.logo = null;
-
-      if (this.selectedFile) {
-        this.selectedFile = null;
-      }
-    },
-    removeImage() {
-      this.data.image = null;
+      this.editdItem.image = null;
 
       if (this.selectedFile) {
         this.selectedFile = null;
@@ -560,32 +429,17 @@ export default {
     async getCenter() {
       try {
         this.table.loading = true;
-        const key =
-          this.tableOptions.sortBy.length > 0
-            ? this.tableOptions.sortBy[0]
-            : "createdAt";
-        const order =
-          this.tableOptions.sortDesc.length > 0
-            ? this.tableOptions.sortDesc[0]
-              ? "desc"
-              : "asc"
-            : "desc";
-
-        const sortByJSON = JSON.stringify({ key, order });
 
         const { page, itemsPerPage } = this.tableOptions;
 
-        const response = await API.getAirlines({
+        const response = await API.getAds({
           page,
           limit: itemsPerPage,
-          sortBy: sortByJSON,
-          search: this.table.search,
-          country_id: this.Countrie,
         });
 
         this.table.centers = response.data.results.data;
-        this.table.totalItems = response.data.results.count;
         this.table.content_url = response.data.content_url;
+        this.table.totalItems = response.data.results.count;
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.$router.push("/login");
@@ -598,31 +452,58 @@ export default {
     },
     async addCenter(event) {
       event.preventDefault();
-
       this.addBtnLoading = true;
 
+        if(this.data.image === null) {
+            this.addBtnLoading = false;
+            this.showDialogfunction("يرجى أضافة صورة", "primary");
+        }
       try {
-        const response = await API.addAirlines({
-          name: this.data.name,
-          en_name: this.data.en_name,
-          code: this.data.code,
-          logo: this.data.image,
+        const response = await API.addAds({
+            image: this.data.image,
         });
 
         this.addBtnLoading = false;
-        this.data.name = "";
-        this.data.en_name = "";
-        this.data.code = "";
-        this.data.image = null;
-        await this.getCenter();
-        this.dialog = false;
+        this.getCenter();
+
         this.showDialogfunction(response.data.message, "primary");
-        this.selectedItem = null;
+        this.dialog = false;
       } catch (error) {
         if (error.response.status === 401) {
           this.$router.push("/login");
         } else if (error.response.status === 500) {
           this.addBtnLoading = false;
+          this.showDialogfunction(error.response.data.results, "#FF5252");
+        }
+      }
+    },
+    editItem(item) {
+      this.editdItem = { ...item };
+      this.dialogEdit = true;
+    },
+    async editItemConfirm(event) {
+      event.preventDefault();
+
+      this.editItemLoading = true;
+      if(this.editdItem.image === null) {
+            this.editItemLoading = false;
+            this.showDialogfunction("يرجى أضافة صورة", "primary");
+        }
+      try {
+        const response = await API.editAds({
+            ads_id: this.editdItem._id,
+
+            image: this.editdItem.image,
+        });
+        this.editItemLoading = false;
+        this.getCenter();
+
+        this.showDialogfunction(response.data.message, "primary");
+        this.dialogEdit = false;
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push("/login");
+        } else if (error.response && error.response.status === 500) {
           this.showDialogfunction(error.response.data.results, "#FF5252");
         }
       }
@@ -640,7 +521,7 @@ export default {
       this.deleteItemLoading = true;
 
       try {
-        const response = await API.removeAirlines(this.deletedItem._id);
+        const response = await API.removeAds(this.deletedItem._id);
 
         this.deleteItemLoading = false;
         this.dialogDelete = false;
@@ -650,50 +531,6 @@ export default {
         if (error.response && error.response.status === 401) {
           this.$router.push("/login");
         } else if (error.response && error.response.status === 500) {
-          this.deleteItemLoading = false;
-          if (error.response.data && error.response.data.results) {
-            this.showDialogfunction(error.response.data.results, "#FF5252");
-          } else {
-            console.error(
-              "Error: Response data or results property is undefined or null."
-            );
-          }
-        } else {
-          console.error("Unexpected error:", error);
-        }
-      }
-    },
-    editItem(item) {
-      this.editdItem = { ...item };
-      this.dialogEdit = true;
-      this.old_logo = item.logo;
-    },
-    async editItemConfirm(event) {
-      event.preventDefault();
-
-      this.editItemLoading = true;
-      try {
-        const response = await API.editAirlines({
-          airline_id: this.editdItem._id,
-          old_logo: this.old_logo,
-          name: this.editdItem.name,
-          en_name: this.editdItem.en_name,
-          code: this.editdItem.code,
-          is_active: this.editdItem.is_active,
-          logo: this.editdItem.logo,
-        });
-        this.editItemLoading = false;
-        this.editdItem = {};
-        this.old_logo = null;
-        this.selectedFile = null;
-        await this.getCenter();
-        this.dialogEdit = false;
-        this.showDialogfunction(response.data.message, "primary");
-      } catch (error) {
-        if (error.response.status === 401) {
-          this.$router.push("/login");
-        } else if (error.response.status === 500) {
-          this.addBtnLoading = false;
           this.showDialogfunction(error.response.data.results, "#FF5252");
         }
       }
@@ -701,3 +538,4 @@ export default {
   },
 };
 </script>
+  

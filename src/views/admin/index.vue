@@ -138,7 +138,7 @@ export default {
         this.loading = true;
 
         const response = await API.getReports();
-        console.log(response);
+
         this.loading = false;
 
         this.data = response.data;

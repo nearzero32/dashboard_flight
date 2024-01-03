@@ -20,13 +20,15 @@
 
       <!---Dark Logo part -->
       <v-toolbar-title
-        class="align-center d-flex mb-9"
+        class="align-center d-flex mb-9" style="justify-content: center;"
         v-if="SidebarColor == 'white' && !$vuetify.theme.dark"
       >
-        <img src="../../../assets/images/logos/logo-dark.svg" class="mt-2" />
+      <h5 style="colore: rgb(0, 0, 0)">Shahrazad</h5>
+        <!-- <img src="" class="mt-2" /> -->
       </v-toolbar-title>
       <v-toolbar-title class="align-center d-flex mb-9" v-else>
-        <img src="../../../assets/images/logos/logo-white.svg" class="mt-2" />
+        <h5 style="colore: white">Shahrazad</h5>
+        <!-- <img src="" class="mt-2" /> -->
       </v-toolbar-title>
       <!-- ---------------------------------------------- -->
       <!---Logo part -->

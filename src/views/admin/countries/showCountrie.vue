@@ -860,7 +860,9 @@ export default {
         this.table.loading = false;
       }
     },
-    async addCenter() {
+    async addCenter(event) {
+      event.preventDefault();
+
       this.addBtnLoading = true;
 
       try {
@@ -929,7 +931,9 @@ export default {
       this.editdItem = { ...item };
       this.dialogEdit = true;
     },
-    async editItemConfirm() {
+    async editItemConfirm(event) {
+      event.preventDefault();
+
       this.editItemLoading = true;
       try {
         const response = await API.editCities({
@@ -995,7 +999,9 @@ export default {
         this.airport.table.loading = false;
       }
     },
-    async addCenterAirport() {
+    async addCenterAirport(event) {
+      event.preventDefault();
+
       this.airport.addBtnLoading = true;
 
       try {
@@ -1059,7 +1065,9 @@ export default {
       this.airport.editdItem = { ...item };
       this.airport.dialogEdit = true;
     },
-    async editItemConfirmAirport() {
+    async editItemConfirmAirport(event) {
+      event.preventDefault();
+
       this.airport.editItemLoading = true;
       try {
         const response = await API.editAirports({

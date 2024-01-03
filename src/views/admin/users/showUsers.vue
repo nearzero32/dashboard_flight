@@ -477,7 +477,9 @@ export default {
         this.table.loading = false;
       }
     },
-    async addCenter() {
+    async addCenter(event) {
+      event.preventDefault();
+
       this.addBtnLoading = true;
       try {
         const response = await API.addUsers({
@@ -513,7 +515,9 @@ export default {
       this.editdItem = { ...item };
       this.dialogEdit = true;
     },
-    async editItemConfirm() {
+    async editItemConfirm(event) {
+      event.preventDefault();
+
       this.editItemLoading = true;
       try {
         const response = await API.editUsers({

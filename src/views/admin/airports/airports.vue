@@ -501,7 +501,9 @@ export default {
         }
       }
     },
-    async addCenter() {
+    async addCenter(event) {
+      event.preventDefault();
+
       this.addBtnLoading = true;
 
       try {
@@ -570,7 +572,9 @@ export default {
       this.editdItem = { ...item };
       this.dialogEdit = true;
     },
-    async editItemConfirm() {
+    async editItemConfirm(event) {
+      event.preventDefault();
+
       this.editItemLoading = true;
       try {
         const response = await API.editAirports({
