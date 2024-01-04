@@ -450,7 +450,6 @@ export default {
           },
           { text: "الأسم", value: "name" },
           { text: "الأسم انكليزي", value: "en_name" },
-          { text: "الدولة", value: "country_name" },
           { text: "الحالة", value: "is_active" },
           { text: "كود الأسم", value: "code" },
           { text: "الوكو", value: "logo" },

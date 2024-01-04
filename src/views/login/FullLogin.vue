@@ -6,7 +6,7 @@
           <div class="pa-7 pa-sm-12">
             <v-row>
               <v-col cols="12" lg="12" xl="12">
-                <img src="@/assets/images/logo-icon.png" />
+                <!-- <img src="@/assets/images/logo-icon.png" /> -->
                 <h2
                   class="font-weight-bold mt-4 blue-grey--text text--darken-2"
                 >
