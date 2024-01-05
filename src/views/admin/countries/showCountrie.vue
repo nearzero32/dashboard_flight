@@ -838,8 +838,10 @@ export default {
 
         const sortByJSON = JSON.stringify({ key, order });
 
-        const { page, itemsPerPage } = this.tableOptions;
-
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
         const response = await API.getCities({
           page,
           limit: itemsPerPage,
@@ -975,8 +977,10 @@ export default {
 
         const sortByJSON = JSON.stringify({ key, order });
 
-        const { page, itemsPerPage } = this.airport.tableOptions;
-
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
         const response = await API.getAirportsCountries({
           page,
           limit: itemsPerPage,

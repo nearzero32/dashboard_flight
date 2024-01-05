@@ -72,8 +72,8 @@ export default {
             text: "#",
             value: "num",
           },
-          { text: "أسم الزبون", value: "info.name" },
-          { text: "رقم الهاتف", value: "info.phone" },
+          { text: "أسم الزبون", value: "name" },
+          { text: "رقم الهاتف", value: "phone" },
           { text: "OTP", value: "otp" },
           { text: "نوع المرسل", value: "sender_type" },
         ],
@@ -116,8 +116,10 @@ export default {
 
         const sortByJSON = JSON.stringify({ key, order });
 
-        const { page, itemsPerPage } = this.tableOptions;
-
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
         const response = await API.getOTP({
           page,
           limit: itemsPerPage,

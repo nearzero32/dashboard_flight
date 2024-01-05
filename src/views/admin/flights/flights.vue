@@ -107,139 +107,146 @@
     <v-dialog v-model="dialog" max-width="800px">
       <v-card>
         <v-card>
-          <v-card-title class="text-h5">اٍضافة رحلة جديدة</v-card-title>
+          <v-card-title class="text-h5" style="padding-block: 10px"
+            >اٍضافة رحلة جديدة</v-card-title
+          >
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-form v-model="isFormvalid" >
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">رقم الرحلة</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="data.number"
-                  :rules="Rules.number"
+            <v-form v-model="isFormvalid">
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">رقم الرحلة</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    v-model="data.number"
+                    :rules="Rules.number"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">الرحلة</v-label>
+                  <v-select
+                    v-model="data.airline_id"
+                    :rules="Rules.airline_id"
+                    :items="CountriesAll"
+                    item-text="name"
+                    item-value="_id"
+                    outlined
+                    label="الرحلة"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium"
+                    >مطار المغادرة</v-label
+                  >
+                  <v-select
+                    v-model="data.departure_airport"
+                    :rules="Rules.departure_airport"
+                    :items="AirportsAll"
+                    item-text="name"
+                    item-value="_id"
+                    label="مطار المغادرة"
+                    single-line
+                    outlined
+                    searchable
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">مطار الهبوط</v-label>
+                  <v-select
+                    v-model="data.arrival_airport"
+                    :rules="Rules.arrival_airport"
+                    :items="AirportsAll"
+                    item-text="name"
+                    outlined
+                    item-value="_id"
+                    label="مطار الهبوط"
+                    single-line
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">وقت الأقلاع</v-label>
+                  <v-datetime-picker
+                    label="وقت الأقلاع"
+                    :rules="Rules.departure_date"
+                    v-model="data.departure_date"
+                    outlined
+                  >
+                  </v-datetime-picker>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">وقت الهبوط</v-label>
+                  <v-datetime-picker
+                    label="وقت الهبوط"
+                    :rules="Rules.arrival_date"
+                    v-model="data.arrival_date"
+                    outlined
+                  >
+                  </v-datetime-picker>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.seats"
+                    v-model="data.seats"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.child_price"
+                    v-model="data.child_price"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.adult_price"
+                    v-model="data.adult_price"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.infant_price"
+                    v-model="data.infant_price"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <!----Personal Info---->
+              <v-card-actions>
+                <v-btn
+                  size="large"
+                  @click="addCenter"
+                  :loading="addBtnLoading"
                   color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الرحلة</v-label>
-                <v-select
-                  v-model="data.airline_id"
-                  :rules="Rules.airline_id"
-                  :items="CountriesAll"
-                  item-text="name"
-                  item-value="_id"
-                  outlined
-                  label="الرحلة"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">مطار المغادرة</v-label>
-                <v-select
-                  v-model="data.departure_airport"
-                  :rules="Rules.departure_airport"
-                  :items="AirportsAll"
-                  item-text="name"
-                  item-value="_id"
-                  outlined
-                  label="مطار المغادرة"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">مطار الهبوط</v-label>
-                <v-select
-                  v-model="data.arrival_airport"
-                  :rules="Rules.arrival_airport"
-                  :items="AirportsAll"
-                  item-text="name"
-                  outlined
-                  item-value="_id"
-                  label="مطار الهبوط"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">وقت الأقلاع</v-label>
-                <v-datetime-picker
-                  label="وقت الأقلاع"
-                  :rules="Rules.departure_date"
-                  v-model="data.departure_date"
-                  outlined
+                  :disabled="!isFormvalid"
+                  type="submit"
+                  text
+                  >اٍضافة</v-btn
                 >
-                </v-datetime-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">وقت الهبوط</v-label>
-                <v-datetime-picker
-                  label="وقت الهبوط"
-                  :rules="Rules.arrival_date"
-                  v-model="data.arrival_date"
-                  outlined
+                <v-btn
+                  class="bg-lighterror text-error ml-4"
+                  @click="dialog = false"
+                  text
+                  >أغلاق</v-btn
                 >
-                </v-datetime-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.seats"
-                  v-model="data.seats"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.child_price"
-                  v-model="data.child_price"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.adult_price"
-                  v-model="data.adult_price"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.infant_price"
-                  v-model="data.infant_price"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-divider></v-divider>
-            <!----Personal Info---->
-            <v-card-actions>
-              <v-btn
-                size="large"
-                @click="addCenter"
-                :loading="addBtnLoading"
-                color="primary"
-                :disabled="!isFormvalid"
-                type="submit"
-                text
-                >اٍضافة</v-btn
-              >
-              <v-btn
-                class="bg-lighterror text-error ml-4"
-                @click="dialog = false"
-                text
-                >أغلاق</v-btn
-              >
-            </v-card-actions>
+              </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>
@@ -255,146 +262,148 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-form v-model="isFormvalid" >
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">رقم الرحلة</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="editdItem.number"
-                  outlined
-                  :rules="Rules.number"
+            <v-form v-model="isFormvalid">
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">رقم الرحلة</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    v-model="editdItem.number"
+                    outlined
+                    :rules="Rules.number"
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">الرحلة</v-label>
+                  <v-select
+                    v-model="editdItem.airline_id"
+                    :rules="Rules.airline_id"
+                    :items="CountriesAll"
+                    item-text="name"
+                    item-value="_id"
+                    label="الرحلة"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium"
+                    >مطار المغادرة</v-label
+                  >
+                  <v-select
+                    v-model="editdItem.departure_airport"
+                    :rules="Rules.departure_airport"
+                    :items="AirportsAll"
+                    item-text="name"
+                    item-value="_id"
+                    label="مطار المغادرة"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">مطار الهبوط</v-label>
+                  <v-select
+                    v-model="editdItem.arrival_airport"
+                    :rules="Rules.arrival_airport"
+                    :items="AirportsAll"
+                    item-text="name"
+                    item-value="_id"
+                    label="مطار الهبوط"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">وقت الأقلاع</v-label>
+                  <v-datetime-picker
+                    label="وقت الأقلاع"
+                    :rules="Rules.departure_date"
+                    v-model="editdItem.departure_date"
+                    format="YYYY-MM-DD h:mm A"
+                    outlined
+                  >
+                  </v-datetime-picker>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">وقت الهبوط</v-label>
+                  <v-datetime-picker
+                    label="وقت الهبوط"
+                    :rules="Rules.arrival_date"
+                    v-model="editdItem.arrival_date"
+                    format="YYYY-MM-DD h:mm A"
+                    outlined
+                  >
+                  </v-datetime-picker>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.seats"
+                    v-model="editdItem.seats"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.child_price"
+                    v-model="editdItem.child_price"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.adult_price"
+                    v-model="editdItem.adult_price"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.infant_price"
+                    v-model="editdItem.infant_price"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">الحالة</v-label>
+                  <v-select
+                    v-model="editdItem.is_active"
+                    :items="options"
+                    item-text="text"
+                    item-value="value"
+                    outlined
+                    label="الحالة"
+                  />
+                </v-col>
+              </v-row>
+              <br />
+              <v-divider></v-divider>
+              <!----Personal Info---->
+              <v-card-actions>
+                <v-btn
+                  size="large"
+                  @click="editItemConfirm"
+                  :loading="editItemLoading"
                   color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الرحلة</v-label>
-                <v-select
-                  v-model="editdItem.airline_id"
-                  :rules="Rules.airline_id"
-                  :items="CountriesAll"
-                  item-text="name"
-                  item-value="_id"
-                  label="الرحلة"
-                  outlined
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">مطار المغادرة</v-label>
-                <v-select
-                  v-model="editdItem.departure_airport"
-                  :rules="Rules.departure_airport"
-                  :items="AirportsAll"
-                  item-text="name"
-                  item-value="_id"
-                  label="مطار المغادرة"
-                  outlined
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">مطار الهبوط</v-label>
-                <v-select
-                  v-model="editdItem.arrival_airport"
-                  :rules="Rules.arrival_airport"
-                  :items="AirportsAll"
-                  item-text="name"
-                  item-value="_id"
-                  label="مطار الهبوط"
-                  outlined
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">وقت الأقلاع</v-label>
-                <v-datetime-picker
-                  label="وقت الأقلاع"
-                  :rules="Rules.departure_date"
-                  v-model="editdItem.departure_date"
-                  format="YYYY-MM-DD h:mm A"
-                  outlined
+                  :disabled="!isFormvalid"
+                  type="submit"
+                  text
+                  >تعديل</v-btn
                 >
-                </v-datetime-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">وقت الهبوط</v-label>
-                <v-datetime-picker
-                  label="وقت الهبوط"
-                  :rules="Rules.arrival_date"
-                  v-model="editdItem.arrival_date"
-                  format="YYYY-MM-DD h:mm A"
-                  outlined
-                >
-                </v-datetime-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.seats"
-                  v-model="editdItem.seats"
-                  color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.child_price"
-                  v-model="editdItem.child_price"
-                  color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.adult_price"
-                  v-model="editdItem.adult_price"
-                  color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.infant_price"
-                  v-model="editdItem.infant_price"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                <v-select
-                  v-model="editdItem.is_active"
-                  :items="options"
-                  item-text="text"
-                  item-value="value"
-                  outlined
-                  label="الحالة"
-                />
-              </v-col>
-            </v-row>
-            <br />
-            <v-divider></v-divider>
-            <!----Personal Info---->
-            <v-card-actions>
-              <v-btn
-                size="large"
-                @click="editItemConfirm"
-                :loading="editItemLoading"
-                color="primary"
-                :disabled="!isFormvalid"
-                type="submit"
-                text
-                >تعديل</v-btn
-              >
-              <v-btn color="primary" text @click="dialogEdit = false">
-                الغاء
-              </v-btn>
-            </v-card-actions>
+                <v-btn color="primary" text @click="dialogEdit = false">
+                  الغاء
+                </v-btn>
+              </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>
@@ -447,7 +456,7 @@
     
 <script>
 import API from "@/api/adminAPI";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 export default {
   data() {
@@ -535,10 +544,10 @@ export default {
         arrival_airport: [(v) => !!v || "يرجى اختيار المطار"],
         departure_date: [(v) => !!v || "يرجى أدخال وقت الأقلاع"],
         arrival_date: [(v) => !!v || "يرجى أدخال وقت الهبوط"],
-        seats: [(v) => !!v || "يرجى ادخال عدد المقاعد"],
-        child_price: [(v) => !!v || "يرجى ادخال سعر الطفل"],
-        adult_price: [(v) => !!v || "يرجى ادخال سعر البالغ"],
-        infant_price: [(v) => !!v || "يرجى ادخال سعر الرضيع"],
+        seats: [(v) => !isNaN(v) || "يرجى إدخال عدد المقاعد"],
+        child_price: [(v) => !isNaN(v) || "يرجى إدخال سعر الطفل (رقماً) "],
+        adult_price: [(v) => !isNaN(v) || "يرجى إدخال سعر البالغ (رقماً) "],
+        infant_price: [(v) => !isNaN(v) || "يرجى إدخال سعر الرضيع (رقماً) "],
       },
       Suggestions: [],
       CountriesAll: [],
@@ -581,8 +590,10 @@ export default {
 
         const sortByJSON = JSON.stringify({ key, order });
 
-        const { page, itemsPerPage } = this.tableOptions;
-
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
         const response = await API.getFlights({
           page,
           limit: itemsPerPage,
@@ -753,3 +764,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.col-md-6 {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 50%;
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-block: 0px;
+}
+</style>

@@ -430,8 +430,10 @@ export default {
       try {
         this.table.loading = true;
 
-        const { page, itemsPerPage } = this.tableOptions;
-
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
         const response = await API.getAds({
           page,
           limit: itemsPerPage,

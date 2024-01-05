@@ -126,6 +126,7 @@
                     return-object
                     outlined
                     label="الأقتراحات"
+                    single-line
                   />
                 </v-col>
 
@@ -459,8 +460,10 @@ export default {
 
         const sortByJSON = JSON.stringify({ key, order });
 
-        const { page, itemsPerPage } = this.tableOptions;
-
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
         const response = await API.getCountries({
           page,
           limit: itemsPerPage,

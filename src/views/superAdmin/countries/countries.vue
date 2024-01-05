@@ -16,6 +16,7 @@
             <v-spacer></v-spacer>
             <v-text-field
               v-model="table.search"
+              @input="getCenter"
               append-icon="mdi-magnify"
               label="بحث"
               single-line
@@ -24,16 +25,18 @@
           </v-card-title>
           <v-data-table
             :headers="table.headers"
-            :items="table.centers"
-            :loading="table.loading"
-            :search="table.search"
             loading-text="جاري التحميل ... الرجاء الانتظار"
+            :items="table.centers"
+            :options.sync="tableOptions"
+            :server-items-length="table.totalItems"
+            :loading="table.loading"
+            class="elevation-1"
             no-results-text="لا توجد بيانات !"
-            class="border"
+            @update:options="getCenter"
           >
-          <template v-slot:item.num="{ item }">
-            {{ table.centers.indexOf(item) + 1 }}
-          </template>
+            <template v-slot:item.num="{ item }">
+              {{ table.centers.indexOf(item) + 1 }}
+            </template>
 
             <template v-slot:item.actions="{ item }">
               <vTooltip bottom>
@@ -308,8 +311,6 @@ export default {
     tableOptions: {
       page: 1,
       itemsPerPage: 10,
-      sortBy: "",
-      sortDesc: false,
     },
     // table
     // message
@@ -356,16 +357,27 @@ export default {
       this.table.loading = true;
 
       try {
-        const { page, itemsPerPage } = this.tableOptions;
-        let sortBy =
+        var { page, itemsPerPage } = this.tableOptions;
+        if (itemsPerPage == -1) {
+          itemsPerPage = this.table.totalItems;
+        }
+        const key =
           this.tableOptions.sortBy.length > 0
             ? this.tableOptions.sortBy[0]
-            : { key: "createdAt", order: "asc" };
+            : "createdAt";
+        const order =
+          this.tableOptions.sortDesc.length > 0
+            ? this.tableOptions.sortDesc[0]
+              ? "desc"
+              : "asc"
+            : "desc";
+
+        const sortByJSON = JSON.stringify({ key, order });
 
         const response = await API.getCountries({
           page,
           limit: itemsPerPage,
-          sortBy: JSON.stringify(sortBy),
+          sortBy: sortByJSON,
           search: this.table.search,
         });
         this.table.centers = response.data.results.data;
