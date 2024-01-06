@@ -449,6 +449,19 @@
           <v-card-text class="pb-0">
             <v-form v-model="airport.isFormvalid" >
             <v-row>
+              <v-col cols="12" md="12">
+                  <v-label class="font-weight-medium mb-2">الأقتراحات </v-label>
+                  <v-autocomplete
+                    v-model="selectedItem"
+                    :items="Suggestions"
+                    item-text="name"
+                    return-object
+                    outlined
+                    label="الأقتراحات"
+                    single-line
+                  />
+                </v-col>
+
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
                 <v-autocomplete
@@ -723,7 +736,7 @@ export default {
         country_idRules: [(v) => !!v || "يرجى أختيار الدولة"],
       },
       Suggestions: [],
-      selectedItem: null,
+      selectedItem: {},
       // add
       // edit
       editItemLoading: false,
@@ -748,7 +761,7 @@ export default {
             },
             { text: "الأسم", value: "name" },
             { text: "الأسم انكليزي", value: "en_name" },
-            { text: "المدينة", value: "city_name" },
+            { text: "المدينة", value: "city_info.name" },
             { text: "كود الأسم", value: "code" },
             { text: "الحالة", value: "is_active" },
             { text: "العمليات", value: "actions" },
@@ -816,12 +829,41 @@ export default {
         this.getCenterAirport();
       }
     },
+    selectedItem: {
+      handler(newVal) {
+        if (newVal !== null && typeof newVal === "object") {
+          this.airport.data.name = newVal.name;
+          this.airport.data.en_name = newVal.en_name;
+          this.airport.data.code = newVal.code;
+        } else {
+          console.error("selectedItem is null or not an object");
+        }
+      },
+      deep: true,
+    },
   },
   created() {
     this.getCenter();
     this.getCenterAirport();
+    this.getAirportsSuggestions();
   },
   methods: {
+    async getAirportsSuggestions() {
+      try {
+        const response = await API.getAirportsSuggestions();
+
+        this.Suggestions = response.data.results;
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push("/login");
+        } else if (error.response && error.response.status === 500) {
+          this.showDialogfunction(error.response.data.results, "#FF5252");
+        }
+      } finally {
+        this.table.loading = false;
+      }
+    },
+
     async getCenter() {
       try {
         this.table.loading = true;

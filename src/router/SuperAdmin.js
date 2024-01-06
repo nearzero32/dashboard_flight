@@ -3,6 +3,7 @@ import SuperAdminStarterPage from "@/views/superAdmin/StarterPage.vue";
 import Centers from "@/views/superAdmin/centers/centers.vue";
 import Center from "@/views/superAdmin/centers/center.vue";
 import Countries from "@/views/superAdmin/countries/countries.vue";
+import airportSuggestion from "@/views/superAdmin/airportSuggestion/airportSuggestion.vue";
 
 const SuperAdmin = {
   path: "/",
@@ -53,6 +54,20 @@ const SuperAdmin = {
       path: "countries",
       component: Countries,
       name: "countries",
+      beforeEnter: (to, from, next) => {
+        const isAuthenticated = JSON.parse(localStorage.getItem("user"));
+
+        if (isAuthenticated && isAuthenticated.type === "super_admin") {
+          next();
+        } else {
+          next("/login");
+        }
+      },
+    },
+    {
+      path: "airportSuggestion",
+      component: airportSuggestion,
+      name: "airportSuggestion",
       beforeEnter: (to, from, next) => {
         const isAuthenticated = JSON.parse(localStorage.getItem("user"));
 

@@ -18,6 +18,12 @@ export default [
     to: "/countries",
     type: "super_admin",
   },
+  {
+    title: "أقتراحات المطارات",
+    icon: "pie-chart",
+    to: "/airportSuggestion",
+    type: "super_admin",
+  },
   // super_admin
   // admin
   {

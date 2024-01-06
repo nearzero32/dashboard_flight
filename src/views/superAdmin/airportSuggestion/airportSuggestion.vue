@@ -75,7 +75,7 @@
       <v-dialog v-model="dialog" activator="parent">
         <v-card>
           <v-card>
-            <v-card-title class="text-h5">أضافة دولة جديدة</v-card-title>
+            <v-card-title class="text-h5">أضافة مطار جديد</v-card-title>
             <v-divider></v-divider>
             <!----Account Details---->
             <v-card-text class="pb-0">
@@ -114,10 +114,20 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
-                  <v-label class="font-weight-medium mb-2">كود الهاتف</v-label>
+                  <v-label class="font-weight-medium mb-2">أسم الدولة</v-label>
                   <v-text-field
-                    v-model="data.phone_code"
-                    :rules="Rules.phone_codeRules"
+                    v-model="data.country_name"
+                    :rules="Rules.country_name"
+                    class="mb-8"
+                    required
+                    hide-details="auto"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">أسم المدينة</v-label>
+                  <v-text-field
+                    v-model="data.city_name"
+                    :rules="Rules.city_name"
                     class="mb-8"
                     required
                     hide-details="auto"
@@ -210,15 +220,25 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">كود الهاتف</v-label>
-                <v-text-field
-                  v-model="editdItem.phone_code"
-                  :rules="Rules.phone_codeRules"
-                  class="mb-8"
-                  required
-                  hide-details="auto"
-                ></v-text-field>
-              </v-col>
+                  <v-label class="font-weight-medium mb-2">أسم الدولة</v-label>
+                  <v-text-field
+                    v-model="editdItem.country_name"
+                    :rules="Rules.country_name"
+                    class="mb-8"
+                    required
+                    hide-details="auto"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">أسم المدينة</v-label>
+                  <v-text-field
+                    v-model="editdItem.city_name"
+                    :rules="Rules.city_name"
+                    class="mb-8"
+                    required
+                    hide-details="auto"
+                  ></v-text-field>
+                </v-col>
             </v-row>
           </v-form>
             <v-divider></v-divider>
@@ -277,7 +297,7 @@ export default {
   data: () => ({
     // nav
     page: {
-      title: "أقتراحات الدول",
+      title: "أقتراحات المطارات",
     },
     breadcrumbs: [
       {
@@ -286,7 +306,7 @@ export default {
         to: "/SuperAdminHome",
       },
       {
-        text: "أقتراحات الدول",
+        text: "أقتراحات المطارات",
         disabled: true,
       },
     ],
@@ -304,8 +324,9 @@ export default {
         },
         { text: "الأسم", value: "name" },
         { text: "الأسم انكليزي", value: "en_name" },
+        { text: "أسم الدولة", value: "country_name" },
+        { text: "أسم المدينة", value: "city_name" },
         { text: "الكود", value: "code" },
-        { text: "كود الهاتف", value: "phone_code" },
         { text: "العمليات", value: "actions" },
       ],
       centers: [],
@@ -332,7 +353,8 @@ export default {
       name: "",
       en_name: "",
       code: "",
-      phone_code: "",
+      country_name: "",
+      city_name: "",
     },
     Rules: {
       account_nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
@@ -378,12 +400,13 @@ export default {
 
         const sortByJSON = JSON.stringify({ key, order });
 
-        const response = await API.getCountries({
+        const response = await API.getAirportSuggestion({
           page,
           limit: itemsPerPage,
           sortBy: sortByJSON,
           search: this.table.search,
         });
+        console.log(response)
         this.table.centers = response.data.results.data;
         this.table.content_url = response.data.content_url;
         this.table.totalItems = response.data.results.count;
@@ -401,18 +424,20 @@ export default {
       this.addBtnLoading = true;
 
       try {
-        const response = await API.addCountries({
+        const response = await API.addAirportSuggestion({
           name: this.data.name,
           en_name: this.data.en_name,
           code: this.data.code,
-          phone_code: this.data.phone_code,
+          country_name: this.data.country_name,
+          city_name: this.data.city_name,
         });
 
         this.addBtnLoading = false;
         this.data.name = "";
         this.data.en_name = "";
         this.data.code = "";
-        this.data.phone_code = "";
+        this.data.country_name = "";
+        this.data.city_name = "";
         await this.getCenter();
         this.dialog = false;
         this.showDialogfunction(response.data.message, "primary");
@@ -438,7 +463,7 @@ export default {
       this.deleteItemLoading = true;
 
       try {
-        const response = await API.removeCountries(this.deletedItem._id);
+        const response = await API.removeAirportSuggestion(this.deletedItem._id);
 
         this.deleteItemLoading = false;
         this.dialogDelete = false;
@@ -468,12 +493,13 @@ export default {
     async editItemConfirm() {
       this.editItemLoading = true;
       try {
-        const response = await API.editCountries({
-          country_id: this.editdItem._id,
+        const response = await API.editAirportSuggestion({
+          airport_id: this.editdItem._id,
           name: this.editdItem.name,
           en_name: this.editdItem.en_name,
           code: this.editdItem.code,
-          phone_code: this.editdItem.phone_code,
+          country_name: this.editdItem.country_name,
+          city_name: this.editdItem.city_name,
         });
         this.editItemLoading = false;
         this.editdItem = {};

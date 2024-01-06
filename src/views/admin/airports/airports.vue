@@ -127,6 +127,18 @@
           <v-card-text class="pb-0">
             <v-form v-model="isFormvalid">
               <v-row>
+                <v-col cols="12" md="12">
+                  <v-label class="font-weight-medium mb-2">الأقتراحات </v-label>
+                  <v-autocomplete
+                    v-model="selectedItem"
+                    :items="Suggestions"
+                    item-text="name"
+                    return-object
+                    outlined
+                    label="الأقتراحات"
+                    single-line
+                  />
+                </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">المدينة </v-label>
                   <v-autocomplete
@@ -426,7 +438,7 @@ export default {
       },
       Suggestions: [],
       CountriesAll: [],
-      selectedItem: null,
+      selectedItem: {},
       Countrie: null,
       // add
       // edit
@@ -450,13 +462,41 @@ export default {
         this.getCenter();
       }
     },
+    selectedItem: {
+      handler(newVal) {
+        if (newVal !== null && typeof newVal === "object") {
+          this.data.name = newVal.name;
+          this.data.en_name = newVal.en_name;
+          this.data.code = newVal.code;
+        } else {
+          console.error("selectedItem is null or not an object");
+        }
+      },
+      deep: true,
+    },
   },
 
   created() {
     this.getCenter();
+    this.getAirportsSuggestions();
     this.getCountriesAll();
   },
   methods: {
+    async getAirportsSuggestions() {
+      try {
+        const response = await API.getAirportsSuggestions();
+
+        this.Suggestions = response.data.results;
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push("/login");
+        } else if (error.response && error.response.status === 500) {
+          this.showDialogfunction(error.response.data.results, "#FF5252");
+        }
+      } finally {
+        this.table.loading = false;
+      }
+    },
     async getCenter() {
       try {
         this.table.loading = true;

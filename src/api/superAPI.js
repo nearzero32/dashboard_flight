@@ -78,6 +78,53 @@ class Api {
   }
   // Center
 
+  // AirportSuggestion
+  async addAirportSuggestion({ name, en_name, code, country_name, city_name }) {
+    const requestData = {
+      name,
+      en_name,
+      code,
+      country_name,
+      city_name,
+    };
+    const response = await axiosInstance.post(
+      `/admin/airports/suggestion`,
+      requestData
+    );
+
+    return response;
+  }
+  async editAirportSuggestion({ airport_id, name, en_name, code, country_name, city_name }) {
+    const requestData = {
+      airport_id,
+      name,
+      en_name,
+      code,
+      country_name,
+      city_name,
+    };
+    const response = await axiosInstance.put(
+      `/admin/airports/suggestion`,
+      requestData
+    );
+    return response;
+  }
+  async getAirportSuggestion({ page, limit, sortBy, search }) {
+    const response = await axiosInstance.get(
+      `/admin/airports/suggestion?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}`
+    );
+
+    return response;
+  }
+  async removeAirportSuggestion(id) {
+    const response = await axiosInstance.delete(
+      `/admin/airports/suggestion/airport_id/${id}`
+    );
+
+    return response;
+  }
+  // AirportSuggestion
+
   // CenterUsers
   async addCenterUsers({
     center_id,

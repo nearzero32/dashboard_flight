@@ -211,6 +211,12 @@ class Api {
     );
     return response;
   }
+  async getAirportsSuggestions() {
+    const response = await axiosInstance.get(
+      `/airports/suggestions`
+    );
+    return response;
+  }
   async getAirportsCountries({
     page,
     limit,
@@ -324,10 +330,9 @@ class Api {
     arrival_airport,
     departure_date,
     arrival_date,
-    seats,
-    child_price,
-    adult_price,
-    infant_price,
+    commercial,
+    business,
+    first_class,
   }) {
     const requestData = {
       number,
@@ -336,11 +341,10 @@ class Api {
       arrival_airport,
       departure_date,
       arrival_date,
-      seats,
-      child_price,
-      adult_price,
-      infant_price,
-    };
+      commercial,
+      business,
+      first_class,
+      };
     const response = await axiosInstance.post(`/flights`, requestData);
     return response;
   }
@@ -352,11 +356,10 @@ class Api {
     arrival_airport,
     departure_date,
     arrival_date,
-    seats,
-    child_price,
-    adult_price,
-    infant_price,
-    is_active,
+    commercial,
+    business,
+    first_class,
+  is_active,
   }) {
     const requestData = {
       flight_id,
@@ -366,10 +369,9 @@ class Api {
       arrival_airport,
       departure_date,
       arrival_date,
-      seats,
-      child_price,
-      adult_price,
-      infant_price,
+      commercial,
+      business,
+      first_class,
       is_active,
     };
     const response = await axiosInstance.put(`/flights`, requestData);
