@@ -127,7 +127,7 @@
                 <v-label class="mb-2 font-weight-medium"
                   >صلاحيات المستخدم</v-label
                 >
-                <v-select
+                <v-autocomplete
                   v-model="data.actions"
                   :items="action"
                   outlined
@@ -137,7 +137,7 @@
                   chips
                   label="صلاحيات المستخدم"
                   multiple
-                ></v-select>
+                ></v-autocomplete>
               </v-col>
               <v-col cols="12" md="6">
                 <v-label class="mb-2 font-weight-medium">العنوان</v-label>
@@ -233,7 +233,7 @@
                 <v-label class="mb-2 font-weight-medium"
                   >صلاحيات المستخدم</v-label
                 >
-                <v-select
+                <v-autocomplete
                   v-if="
                     editdItem &&
                     editdItem.privileges &&
@@ -248,7 +248,7 @@
                   chips
                   label="صلاحيات المستخدم"
                   multiple
-                ></v-select>
+                ></v-autocomplete>
               </v-col>
               <v-col cols="12" md="6">
                 <v-label class="mb-2 font-weight-medium">العنوان</v-label>

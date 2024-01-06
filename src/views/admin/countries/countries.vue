@@ -119,7 +119,7 @@
               <v-row>
                 <v-col cols="12" md="12">
                   <v-label class="font-weight-medium mb-2">الأقتراحات </v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="selectedItem"
                     :items="Suggestions"
                     item-text="name"
@@ -254,7 +254,7 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="editdItem.is_active"
                     :items="options"
                     item-title="text"

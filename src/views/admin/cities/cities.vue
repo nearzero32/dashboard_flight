@@ -36,7 +36,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" lg="6" md="6">
-                <v-select
+                <v-autocomplete
                   clearable
                   v-model="Countrie"
                   :items="CountriesAll"
@@ -129,7 +129,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الدولة </v-label>
-                <v-select
+                <v-autocomplete
                   v-model="data.country_id"
                   :rules="Rules.country_idRules"
                   :items="CountriesAll"
@@ -209,7 +209,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الدولة </v-label>
-                <v-select
+                <v-autocomplete
                   v-model="editdItem.country_id"
                   :rules="Rules.country_idRules"
                   :items="CountriesAll"
@@ -252,7 +252,7 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                <v-select
+                <v-autocomplete
                   v-model="editdItem.is_active"
                   :items="options"
                   item-title="text"

@@ -153,7 +153,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" lg="6" md="6">
-              <v-select
+              <v-autocomplete
                 clearable
                 v-model="Countrie"
                 :items="table.centers"
@@ -363,7 +363,7 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                <v-select
+                <v-autocomplete
                   v-model="editdItem.is_active"
                   :items="options"
                   item-title="text"
@@ -451,7 +451,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
-                <v-select
+                <v-autocomplete
                   v-model="airport.data.city_id"
                   :rules="airport.Rules.country_idRules"
                   :items="table.centers"
@@ -532,7 +532,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">المدينة </v-label>
-                <v-select
+                <v-autocomplete
                   v-model="airport.editdItem.city_id"
                   :rules="airport.Rules.country_idRules"
                   :items="table.centers"
@@ -575,7 +575,7 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                <v-select
+                <v-autocomplete
                   v-model="airport.editdItem.is_active"
                   :items="airport.options"
                   outlined

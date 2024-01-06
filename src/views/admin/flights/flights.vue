@@ -127,7 +127,7 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="mb-2 font-weight-medium">الرحلة</v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="data.airline_id"
                     :rules="Rules.airline_id"
                     :items="CountriesAll"
@@ -141,7 +141,7 @@
                   <v-label class="mb-2 font-weight-medium"
                     >مطار المغادرة</v-label
                   >
-                  <v-select
+                  <v-autocomplete
                     v-model="data.departure_airport"
                     :rules="Rules.departure_airport"
                     :items="AirportsAll"
@@ -155,7 +155,7 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="mb-2 font-weight-medium">مطار الهبوط</v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="data.arrival_airport"
                     :rules="Rules.arrival_airport"
                     :items="AirportsAll"
@@ -276,7 +276,7 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="mb-2 font-weight-medium">الرحلة</v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="editdItem.airline_id"
                     :rules="Rules.airline_id"
                     :items="CountriesAll"
@@ -290,7 +290,7 @@
                   <v-label class="mb-2 font-weight-medium"
                     >مطار المغادرة</v-label
                   >
-                  <v-select
+                  <v-autocomplete
                     v-model="editdItem.departure_airport"
                     :rules="Rules.departure_airport"
                     :items="AirportsAll"
@@ -302,7 +302,7 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="mb-2 font-weight-medium">مطار الهبوط</v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="editdItem.arrival_airport"
                     :rules="Rules.arrival_airport"
                     :items="AirportsAll"
@@ -376,7 +376,7 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                  <v-select
+                  <v-autocomplete
                     v-model="editdItem.is_active"
                     :items="options"
                     item-text="text"
