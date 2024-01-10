@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .bg-light-primary {
   background-color: $light-primary !important;
 }
@@ -21,4 +22,29 @@
 
 .v-application .v-card.v-sheet {
   box-shadow: 1px 0 20px #00000014!important;
+=======
+.bg-light-primary {
+  background-color: $light-primary !important;
+}
+
+.bg-light-error {
+  background-color: $light-danger !important;
+}
+
+.bg-light-success {
+  background-color: $light-success !important;
+}
+
+.bg-light-warning {
+  background-color: $light-warning !important;
+}
+
+.bg-light-info {
+  background-color: $light-info !important;
+}
+
+
+.v-application .v-card.v-sheet {
+  box-shadow: 1px 0 20px #00000014!important;
+>>>>>>> sjad
 }
