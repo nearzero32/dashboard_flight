@@ -251,6 +251,18 @@
                   disabled
                 ></v-text-field>
               </v-col>
+              <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">الأقتراحات </v-label>
+                  <v-autocomplete
+                    v-model="selectedItemCities"
+                    :items="SuggestionsCities"
+                    item-text="name"
+                    return-object
+                    outlined
+                    label="الأقتراحات"
+                    single-line
+                  />
+                </v-col>
 
               <v-col cols="12" md="6">
                 <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
@@ -737,6 +749,7 @@ export default {
       },
       Suggestions: [],
       selectedItem: {},
+      selectedItemCities: {},
       // add
       // edit
       editItemLoading: false,
@@ -817,6 +830,7 @@ export default {
         // delete
       },
       Countrie: null,
+      SuggestionsCities: null,
 
     };
   },
@@ -841,11 +855,24 @@ export default {
       },
       deep: true,
     },
+    selectedItemCities: {
+      handler(newVal) {
+        if (newVal !== null && typeof newVal === "object") {
+          this.data.name = newVal.name;
+          this.data.en_name = newVal.en_name;
+          this.data.code = newVal.code;
+        } else {
+          console.error("selectedItem is null or not an object");
+        }
+      },
+      deep: true,
+    },
   },
   created() {
     this.getCenter();
     this.getCenterAirport();
     this.getAirportsSuggestions();
+    this.getCitiesSuggestions();
   },
   methods: {
     async getAirportsSuggestions() {
@@ -853,6 +880,21 @@ export default {
         const response = await API.getAirportsSuggestions();
 
         this.Suggestions = response.data.results;
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push("/login");
+        } else if (error.response && error.response.status === 500) {
+          this.showDialogfunction(error.response.data.results, "#FF5252");
+        }
+      } finally {
+        this.table.loading = false;
+      }
+    },
+    async getCitiesSuggestions() {
+      try {
+        const response = await API.getCitiesSuggestions(this.$route.params.name);
+
+        this.SuggestionsCities = response.data.results;
       } catch (error) {
         if (error.response && error.response.status === 401) {
           this.$router.push("/login");

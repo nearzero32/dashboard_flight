@@ -158,7 +158,6 @@
                     item-text="name"
                     item-value="_id"
                     outlined
-                    label="الرحلة"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
@@ -171,7 +170,6 @@
                     :items="AirportsAll"
                     item-text="name"
                     item-value="_id"
-                    label="مطار المغادرة"
                     single-line
                     outlined
                     searchable
@@ -186,14 +184,12 @@
                     item-text="name"
                     outlined
                     item-value="_id"
-                    label="مطار الهبوط"
                     single-line
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">وقت الأقلاع</v-label>
                   <v-datetime-picker
-                    label="وقت الأقلاع"
                     :rules="Rules.departure_date"
                     v-model="data.departure_date"
                     outlined
@@ -203,7 +199,6 @@
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">وقت الهبوط</v-label>
                   <v-datetime-picker
-                    label="وقت الهبوط"
                     :rules="Rules.arrival_date"
                     v-model="data.arrival_date"
                     outlined
@@ -211,135 +206,189 @@
                   </v-datetime-picker>
                 </v-col>
                 <v-col cols="12" md="12">
-                  <strong> الدرجة السياحية </strong>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.commercialSeats"
-                    v-model="data.commercial.seats"
+                  <v-label class="mb-2 font-weight-medium"
+                    >درجات الرحلة</v-label
+                  >
+                  <v-autocomplete
+                    v-model="grades"
+                    :items="itemsGrades"
+                    item-text="text"
+                    item-value="value"
                     outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.commercialChild_price"
-                    v-model="data.commercial.child_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.commercialAdult_price"
-                    v-model="data.commercial.adult_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.commercialInfant_price"
-                    v-model="data.commercial.infant_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="12">
-                  <strong> رجال أعمال </strong>
+                    multiple
+                    :required="true"
+                    :error-messages="
+                      grades.length === 0 ? ['يرجى تحديد الدرجات المتوفرة'] : []
+                    "
+                  />
                 </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.businessSeats"
-                    v-model="data.business.seats"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.businessChild_price"
-                    v-model="data.business.child_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.businessAdult_price"
-                    v-model="data.business.adult_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.businessInfant_price"
-                    v-model="data.business.infant_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="12">
-                  <strong> الدرجة الأولى </strong>
+                <v-col cols="12" md="12" v-if="first_class">
+                  <v-row>
+                    <v-col cols="12" md="12">
+                      <strong> الدرجة الأولى </strong>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >عدد المقاعد</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.first_classSeats"
+                        v-model="data.first_class.seats"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر الطفل</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.first_classChild_price"
+                        v-model="data.first_class.child_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر البالغ</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.first_classAdult_price"
+                        v-model="data.first_class.adult_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر الرضيع</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.first_classInfant_price"
+                        v-model="data.first_class.infant_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
                 </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">عدد المقاعد</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.first_classSeats"
-                    v-model="data.first_class.seats"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
+                <v-col cols="12" md="12" v-if="business_class">
+                  <v-row>
+                    <v-col cols="12" md="12">
+                      <strong> رجال أعمال </strong>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >عدد المقاعد</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.businessSeats"
+                        v-model="data.business.seats"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر الطفل</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.businessChild_price"
+                        v-model="data.business.child_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر البالغ</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.businessAdult_price"
+                        v-model="data.business.adult_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر الرضيع</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.businessInfant_price"
+                        v-model="data.business.infant_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
                 </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر الطفل</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.first_classChild_price"
-                    v-model="data.first_class.child_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر البالغ</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.first_classAdult_price"
-                    v-model="data.first_class.adult_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-label class="mb-2 font-weight-medium">سعر الرضيع</v-label>
-                  <v-text-field
-                    variant="outlined"
-                    :rules="Rules.first_classInfant_price"
-                    v-model="data.first_class.infant_price"
-                    outlined
-                    color="primary"
-                  ></v-text-field>
+
+                <v-col cols="12" md="12" v-if="economy_class">
+                  <v-row>
+                    <v-col cols="12" md="12">
+                      <strong> الدرجة السياحية </strong>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >عدد المقاعد</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.commercialSeats"
+                        v-model="data.commercial.seats"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر الطفل</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.commercialChild_price"
+                        v-model="data.commercial.child_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر البالغ</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.commercialAdult_price"
+                        v-model="data.commercial.adult_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-label class="mb-2 font-weight-medium"
+                        >سعر الرضيع</v-label
+                      >
+                      <v-text-field
+                        variant="outlined"
+                        :rules="Rules.commercialInfant_price"
+                        v-model="data.commercial.infant_price"
+                        outlined
+                        color="primary"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
               <v-divider></v-divider>
@@ -397,7 +446,6 @@
                     :items="CountriesAll"
                     item-text="name"
                     item-value="_id"
-                    label="الرحلة"
                     outlined
                   />
                 </v-col>
@@ -411,7 +459,6 @@
                     :items="AirportsAll"
                     item-text="name"
                     item-value="_id"
-                    label="مطار المغادرة"
                     outlined
                   />
                 </v-col>
@@ -423,14 +470,12 @@
                     :items="AirportsAll"
                     item-text="name"
                     item-value="_id"
-                    label="مطار الهبوط"
                     outlined
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">وقت الأقلاع</v-label>
                   <v-datetime-picker
-                    label="وقت الأقلاع"
                     :rules="Rules.departure_date"
                     v-model="editdItem.departure_date"
                     format="YYYY-MM-DD h:mm A"
@@ -441,7 +486,6 @@
                 <v-col cols="12" md="6">
                   <v-label class="font-weight-medium mb-2">وقت الهبوط</v-label>
                   <v-datetime-picker
-                    label="وقت الهبوط"
                     :rules="Rules.arrival_date"
                     v-model="editdItem.arrival_date"
                     format="YYYY-MM-DD h:mm A"
@@ -649,7 +693,6 @@
                     item-text="text"
                     item-value="value"
                     outlined
-                    label="الحالة"
                   />
                 </v-col>
               </v-row>
@@ -788,6 +831,15 @@ export default {
       isFormvalid: false,
       addBtnLoading: false,
       dialog: false,
+      first_class: false,
+      business_class: false,
+      economy_class: false,
+      grades: [],
+      itemsGrades: [
+        { text: "درجة أولى", value: "first_class" },
+        { text: "درجة رجال الأعمال", value: "business_class" },
+        { text: "درجة سياحية", value: "economy_class" },
+      ],
       options: [
         { text: "مفعل", value: true },
         { text: "غير مفعل", value: false },
@@ -824,39 +876,8 @@ export default {
         departure_airport: [(v) => !!v || "يرجى اختيار المطار"],
         arrival_airport: [(v) => !!v || "يرجى اختيار المطار"],
         departure_date: [(v) => !!v || "يرجى أدخال وقت الأقلاع"],
+        grades: [(v) => !!v || "يرجى تحديد الدرجات المتوفرة"],
         arrival_date: [(v) => !!v || "يرجى أدخال وقت الهبوط"],
-        commercialSeats: [
-          (v) => !!v || "يرجى إدخال عدد المقاعد (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        commercialChild_price: [
-          (v) => !!v || "يرجى إدخال سعر الطفل (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        commercialAdult_price: [
-          (v) => !!v || "يرجى إدخال سعر البالغ (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        commercialInfant_price: [
-          (v) => !!v || "يرجى إدخال سعر الرضيع (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        businessSeats: [
-          (v) => !!v || "يرجى إدخال عدد المقاعد (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        businessChild_price: [
-          (v) => !!v || "يرجى إدخال سعر الطفل (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        businessAdult_price: [
-          (v) => !!v || "يرجى إدخال سعر البالغ (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
-        businessInfant_price: [
-          (v) => !!v || "يرجى إدخال سعر الرضيع (رقمًا)",
-          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
-        ],
         first_classSeats: [
           (v) => !!v || "يرجى إدخال عدد المقاعد (رقمًا)",
           (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
@@ -864,14 +885,129 @@ export default {
         first_classChild_price: [
           (v) => !!v || "يرجى إدخال سعر الطفل (رقمًا)",
           (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (
+              v < this.data.business.child_price ||
+              v < this.data.commercial.child_price
+            ) {
+              return "يجب أن يكون سعر الطفل في التذكرة الدرجة الأولى أعلى من الدرجات الأخرى";
+            }
+            return true;
+          },
         ],
         first_classAdult_price: [
           (v) => !!v || "يرجى إدخال سعر البالغ (رقمًا)",
           (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (
+              v < this.data.business.adult_price ||
+              v < this.data.commercial.adult_price
+            ) {
+              return "يجب أن يكون سعر البالغ في التذكرة الدرجة الأولى أعلى من الدرجات الأخرى";
+            }
+            return true;
+          },
         ],
         first_classInfant_price: [
           (v) => !!v || "يرجى إدخال سعر الرضيع (رقمًا)",
           (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (
+              v < this.data.business.infant_price ||
+              v < this.data.commercial.infant_price
+            ) {
+              return "يجب أن يكون سعر الرضيع في التذكرة الدرجة الأولى أعلى من الدرجات الأخرى";
+            }
+            return true;
+          },
+        ],
+
+        businessSeats: [
+          (v) => !!v || "يرجى إدخال عدد المقاعد (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+        ],
+        businessChild_price: [
+          (v) => !!v || "يرجى إدخال سعر الطفل (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (v > this.data.first_class.child_price) {
+              return "يجب أن يكون سعر الطفل في تذكرة رجال الأعمال أقل من الدرجة الأولى";
+            } else if(v < this.data.commercial.child_price){
+              return "يجب أن يكون سعر الطفل في تذكرة رجال الأعمال اعلى من الدرجة السياحية";
+            } else{
+              return true;
+            }
+          },
+        ],
+        businessAdult_price: [
+          (v) => !!v || "يرجى إدخال سعر البالغ (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (v > this.data.first_class.adult_price) {
+              return "يجب أن يكون سعر البالغ في تذكرة رجال الأعمال أقل من الدرجة الأولى";
+            } else if(v < this.data.commercial.adult_price){
+              return "يجب أن يكون سعر البالغ في تذكرة رجال الأعمال اعلى من الدرجة السياحية";
+            } else{
+              return true;
+            }
+          },
+        ],
+        businessInfant_price: [
+          (v) => !!v || "يرجى إدخال سعر الرضيع (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (v > this.data.first_class.infant_price) {
+              return "يجب أن يكون سعر الرضيع في تذكرة رجال الأعمال أقل من الدرجة الأولى";
+            } else if(v < this.data.commercial.infant_price){
+              return "يجب أن يكون سعر الرضيع في تذكرة رجال الأعمال اعلى من الدرجة السياحية";
+            } else{
+              return true;
+            }
+          },
+        ],
+
+        commercialSeats: [
+          (v) => !!v || "يرجى إدخال عدد المقاعد (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+        ],
+        commercialChild_price: [
+          (v) => !!v || "يرجى إدخال سعر الطفل (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (
+              v > this.data.first_class.child_price ||
+              v > this.data.business.child_price
+            ) {
+              return "يجب أن يكون سعر الطفل في تذكرة الدرجة السياحية اقل من الدرجات الأخرى";
+            }
+            return true;
+          },
+        ],
+        commercialAdult_price: [
+          (v) => !!v || "يرجى إدخال سعر البالغ (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (
+              v > this.data.first_class.adult_price ||
+              v > this.data.business.adult_price
+            ) {
+              return "يجب أن يكون سعر البالغ في تذكرة الدرجة السياحية اقل من الدرجات الأخرى";
+            }
+            return true;
+          },
+        ],
+        commercialInfant_price: [
+          (v) => !!v || "يرجى إدخال سعر الرضيع (رقمًا)",
+          (v) => /^\d+$/.test(v) || "يرجى إدخال أرقام فقط",
+          (v) => {
+            if (
+              v > this.data.first_class.infant_price ||
+              v > this.data.business.infant_price
+            ) {
+              return "يجب أن يكون سعر الرضيع في تذكرة الدرجة السياحية اقل من الدرجات الأخرى";
+            }
+            return true;
+          },
         ],
       },
       Suggestions: [],
@@ -891,6 +1027,18 @@ export default {
       deletedItem: {},
       // delete
     };
+  },
+
+  watch: {
+    grades(newGrades) {
+      this.first_class = false;
+      this.business_class = false;
+      this.economy_class = false;
+
+      newGrades.forEach((grade) => {
+        this[grade] = true;
+      });
+    },
   },
 
   created() {
@@ -996,6 +1144,7 @@ export default {
         this.data.child_price = null;
         this.data.adult_price = null;
         this.data.infant_price = null;
+        this.grades = [];
         await this.getCenter();
         this.dialog = false;
         this.showDialogfunction(response.data.message, "primary");

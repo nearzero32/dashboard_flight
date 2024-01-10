@@ -125,71 +125,85 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-form v-model="isFormvalid" >
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">الدولة </v-label>
-                <v-autocomplete
-                  v-model="data.country_id"
-                  :rules="Rules.country_idRules"
-                  :items="CountriesAll"
-                  item-text="name"
-                  item-value="_id"
-                  outlined
-                />
-              </v-col>
-
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="data.name"
-                  :rules="Rules.nameRules"
+            <v-form v-model="isFormvalid">
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">الدولة </v-label>
+                  <v-autocomplete
+                    v-model="data.selectedCountry"
+                    :items="CountriesAll"
+                    return-object
+                    item-text="name"
+                    item-value="_id"
+                    @change="getAirportsSuggestions()"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">الأقتراحات </v-label>
+                  <v-autocomplete
+                    v-model="selectedItem"
+                    :items="Suggestions"
+                    item-text="name"
+                    return-object
+                    outlined
+                    label="الأقتراحات"
+                    single-line
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    v-model="data.name"
+                    :rules="Rules.nameRules"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium"
+                    >الأسم انكليزي</v-label
+                  >
+                  <v-text-field
+                    variant="outlined"
+                    v-model="data.en_name"
+                    :rules="Rules.en_nameRules"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.codeRules"
+                    v-model="data.code"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <!----Personal Info---->
+              <v-card-actions>
+                <v-btn
+                  size="large"
+                  @click="addCenter"
+                  :loading="addBtnLoading"
                   color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم انكليزي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="data.en_name"
-                  :rules="Rules.en_nameRules"
-                  color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">كود الأسم</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.codeRules"
-                  v-model="data.code"
-                  color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-divider></v-divider>
-            <!----Personal Info---->
-            <v-card-actions>
-              <v-btn
-                size="large"
-                @click="addCenter"
-                :loading="addBtnLoading"
-                color="primary"
-                :disabled="!isFormvalid"
-                type="submit"
-                text
-                >اٍضافة</v-btn
-              >
-              <v-btn
-                class="bg-lighterror text-error ml-4"
-                @click="dialog = false"
-                text
-                >أغلاق</v-btn
-              >
-            </v-card-actions>
+                  :disabled="!isFormvalid"
+                  type="submit"
+                  text
+                  >اٍضافة</v-btn
+                >
+                <v-btn
+                  class="bg-lighterror text-error ml-4"
+                  @click="dialog = false"
+                  text
+                  >أغلاق</v-btn
+                >
+              </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>
@@ -205,81 +219,83 @@
           <v-divider></v-divider>
           <!----Account Details---->
           <v-card-text class="pb-0">
-            <v-form v-model="isFormvalid" >
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">الدولة </v-label>
-                <v-autocomplete
-                  v-model="editdItem.country_id"
-                  :rules="Rules.country_idRules"
-                  :items="CountriesAll"
-                  item-text="name"
-                  item-value="_id"
-                  label="الدولة"
-                  outlined
-                />
-              </v-col>
+            <v-form v-model="isFormvalid">
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">الدولة </v-label>
+                  <v-autocomplete
+                    v-model="editdItem.country_id"
+                    :rules="Rules.country_idRules"
+                    :items="CountriesAll"
+                    item-text="name"
+                    item-value="_id"
+                    label="الدولة"
+                    outlined
+                  />
+                </v-col>
 
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="editdItem.name"
-                  :rules="Rules.nameRules"
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">الأسم عربي</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    v-model="editdItem.name"
+                    :rules="Rules.nameRules"
+                    color="primary"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium"
+                    >الأسم انكليزي</v-label
+                  >
+                  <v-text-field
+                    variant="outlined"
+                    v-model="editdItem.en_name"
+                    :rules="Rules.en_nameRules"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="mb-2 font-weight-medium">كود الاسم</v-label>
+                  <v-text-field
+                    variant="outlined"
+                    :rules="Rules.codeRules"
+                    v-model="editdItem.code"
+                    outlined
+                    color="primary"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-label class="font-weight-medium mb-2">الحالة</v-label>
+                  <v-autocomplete
+                    v-model="editdItem.is_active"
+                    :items="options"
+                    item-title="text"
+                    item-value="value"
+                    outlined
+                    label="الحالة"
+                  />
+                </v-col>
+              </v-row>
+              <br />
+              <v-divider></v-divider>
+              <!----Personal Info---->
+              <v-card-actions>
+                <v-btn
+                  size="large"
+                  @click="editItemConfirm"
+                  :loading="editItemLoading"
+                  :disabled="!isFormvalid"
                   color="primary"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">الأسم انكليزي</v-label>
-                <v-text-field
-                  variant="outlined"
-                  v-model="editdItem.en_name"
-                  :rules="Rules.en_nameRules"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="mb-2 font-weight-medium">كود الاسم</v-label>
-                <v-text-field
-                  variant="outlined"
-                  :rules="Rules.codeRules"
-                  v-model="editdItem.code"
-                  outlined
-                  color="primary"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-label class="font-weight-medium mb-2">الحالة</v-label>
-                <v-autocomplete
-                  v-model="editdItem.is_active"
-                  :items="options"
-                  item-title="text"
-                  item-value="value"
-                  outlined
-                  label="الحالة"
-                />
-              </v-col>
-            </v-row>
-            <br />
-            <v-divider></v-divider>
-            <!----Personal Info---->
-            <v-card-actions>
-              <v-btn
-                size="large"
-                @click="editItemConfirm"
-                :loading="editItemLoading"
-                :disabled="!isFormvalid"
-                color="primary"
-                type="submit"
-                text
-                >تعديل</v-btn
-              >
-              <v-btn color="primary" text @click="dialogEdit = false">
-                الغاء
-              </v-btn>
-            </v-card-actions>
+                  type="submit"
+                  text
+                  >تعديل</v-btn
+                >
+                <v-btn color="primary" text @click="dialogEdit = false">
+                  الغاء
+                </v-btn>
+              </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>
@@ -403,6 +419,7 @@ export default {
         name: "",
         en_name: "",
         code: "",
+        selectedCountry: null,
       },
       Rules: {
         nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
@@ -427,22 +444,58 @@ export default {
       // delete
     };
   },
-  watch: {
-  Countrie(newCountrie) {
-    if (!newCountrie) {
-      this.Countrie = null;
-      this.getCenter();
-    } else {
-      this.getCenter();
-    }
-  },
-},
 
   created() {
     this.getCenter();
     this.getCountriesAll();
+    this.getAirportsSuggestions(); // قم بإضافة استدعاء هنا
   },
+
+  watch: {
+    Countrie(newCountrie) {
+      if (!newCountrie) {
+        this.Countrie = null;
+        this.getCenter();
+      } else {
+        this.getCenter();
+      }
+    },
+    selectedItem: {
+      handler(newVal) {
+        if (newVal !== null && typeof newVal === "object") {
+          this.data.name = newVal.name;
+          this.data.en_name = newVal.en_name;
+          this.data.code = newVal.code;
+        } else {
+          console.error("selectedItem is null or not an object");
+        }
+      },
+      deep: true,
+    },
+  },
+
   methods: {
+    async getAirportsSuggestions() {
+      try {
+        var search;
+        if (this.data.selectedCountry !== null) {
+          search = this.data.selectedCountry.name;
+        } else {
+          search = null;
+        }
+        const response = await API.getCitiesSuggestions(search);
+
+        this.Suggestions = response.data.results;
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$router.push("/login");
+        } else if (error.response && error.response.status === 500) {
+          this.showDialogfunction(error.response.data.results, "#FF5252");
+        }
+      } finally {
+        this.table.loading = false;
+      }
+    },
     async getCenter() {
       try {
         this.table.loading = true;
@@ -507,7 +560,7 @@ export default {
           name: this.data.name,
           en_name: this.data.en_name,
           code: this.data.code,
-          country_id: this.data.country_id,
+          country_id: this.data.selectedCountry._id,
         });
 
         this.addBtnLoading = false;

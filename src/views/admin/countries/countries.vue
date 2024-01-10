@@ -172,6 +172,12 @@
                     outlined
                   ></v-text-field>
                 </v-col>
+                <v-col cols="12" md="6">
+                  <v-checkbox
+                    v-model="data.add_cities_and_airports"
+                    label="أضافة المدن والمطارات الخاصة بالدولة ؟"
+                  ></v-checkbox>
+                </v-col>
               </v-row>
               <v-divider></v-divider>
               <!----Personal Info---->
@@ -400,6 +406,7 @@ export default {
         en_name: "",
         code: "",
         phone_code: "",
+        add_cities_and_airports: true,
       },
       Rules: {
         nameRules: [(v) => !!v || "يرجى إدخال الأسم عربي"],
@@ -511,6 +518,7 @@ export default {
           en_name: this.data.en_name,
           code: this.data.code,
           phone_code: this.data.phone_code,
+          add_cities_and_airports: this.data.add_cities_and_airports,
         });
 
         this.addBtnLoading = false;

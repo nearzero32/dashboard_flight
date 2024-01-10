@@ -19,6 +19,12 @@ export default [
     type: "super_admin",
   },
   {
+    title: "أقتراحات المدن",
+    icon: "pie-chart",
+    to: "/citiesSuggestion",
+    type: "super_admin",
+  },
+  {
     title: "أقتراحات المطارات",
     icon: "pie-chart",
     to: "/airportSuggestion",

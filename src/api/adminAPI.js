@@ -124,12 +124,13 @@ class Api {
     const response = await axiosInstance.get(`/countries/suggestions`);
     return response;
   }
-  async addCountries({ name, en_name, code, phone_code }) {
+  async addCountries({ name, en_name, code, phone_code, add_cities_and_airports }) {
     const requestData = {
       name,
       en_name,
       code,
       phone_code,
+      add_cities_and_airports,
     };
     const response = await axiosInstance.post(`/countries`, requestData);
     return response;
@@ -171,8 +172,8 @@ class Api {
     const response = await axiosInstance.get(`/countries/all`);
     return response;
   }
-  async getCitiesSuggestions() {
-    const response = await axiosInstance.get(`/countries/suggestions`);
+  async getCitiesSuggestions(search) {
+    const response = await axiosInstance.get(`/cities/suggestions?search=${search}`);
     return response;
   }
   async addCities({ name, en_name, code, country_id }) {
